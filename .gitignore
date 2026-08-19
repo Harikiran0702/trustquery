@@ -50,3 +50,6 @@ dist/
 # Temporary files
 *.tmp
 *.temp
+
+# User-uploaded / potentially sensitive documents
+data/uploads/
