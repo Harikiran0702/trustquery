@@ -53,3 +53,7 @@ dist/
 
 # User-uploaded / potentially sensitive documents
 data/uploads/
+
+# ChromaDB local data
+.chroma/
+.chroma_demo/

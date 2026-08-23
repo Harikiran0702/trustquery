@@ -12,7 +12,6 @@ def chunk_documents(
     Split document text into overlapping character-based chunks
     while preserving document metadata.
     """
-
     if chunk_size <= 0:
         raise ValueError("chunk_size must be greater than 0")
 
@@ -26,10 +25,19 @@ def chunk_documents(
 
     for document in documents:
         text = document.get("text", "")
-        metadata = document.get("metadata", {})
 
         if not text.strip():
             continue
+
+        metadata = {}
+
+        nested_metadata = document.get("metadata", {})
+        if isinstance(nested_metadata, dict):
+            metadata.update(nested_metadata)
+
+        for key, value in document.items():
+            if key not in {"text", "metadata"}:
+                metadata[key] = value
 
         start = 0
         chunk_index = 0
