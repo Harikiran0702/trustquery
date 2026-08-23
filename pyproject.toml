@@ -14,6 +14,7 @@ dependencies = [
     "google-genai",
     "pypdf",
     "sentence-transformers",
+    "chromadb",
     ]
 
 [tool.setuptools.packages.find]
