@@ -13,6 +13,7 @@ def get_collection(
 
     return collection
 
+
 def add_chunks(collection, chunks, embeddings):
     if len(chunks) != len(embeddings):
         raise ValueError("Number of chunks must match number of embeddings")
@@ -24,12 +25,19 @@ def add_chunks(collection, chunks, embeddings):
     documents = [chunk["text"] for chunk in chunks]
 
     metadatas = []
+
     for chunk in chunks:
-        metadata = {
-            key: value
-            for key, value in chunk.items()
-            if key != "text"
-        }
+        metadata = {}
+
+        for key, value in chunk.items():
+            if key == "text":
+                continue
+
+            if key == "metadata" and isinstance(value, dict):
+                metadata.update(value)
+            else:
+                metadata[key] = value
+
         metadatas.append(metadata)
 
     collection.add(
@@ -38,6 +46,7 @@ def add_chunks(collection, chunks, embeddings):
         embeddings=embeddings,
         metadatas=metadatas,
     )
+
 
 def search_chunks(collection, query_embedding, top_k=5):
     if top_k <= 0:
