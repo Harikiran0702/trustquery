@@ -13,6 +13,7 @@ dependencies = [
     "python-dotenv",
     "google-genai",
     "pypdf",
+    "sentence-transformers",
     ]
 
 [tool.setuptools.packages.find]
