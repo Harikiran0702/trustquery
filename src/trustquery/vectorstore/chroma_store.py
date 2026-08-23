@@ -38,3 +38,33 @@ def add_chunks(collection, chunks, embeddings):
         embeddings=embeddings,
         metadatas=metadatas,
     )
+
+def search_chunks(collection, query_embedding, top_k=5):
+    if top_k <= 0:
+        raise ValueError("top_k must be greater than 0")
+
+    if not query_embedding:
+        raise ValueError("query_embedding cannot be empty")
+
+    results = collection.query(
+        query_embeddings=[query_embedding],
+        n_results=top_k,
+        include=["documents", "metadatas", "distances"],
+    )
+
+    retrieved_chunks = []
+
+    for document, metadata, distance in zip(
+        results["documents"][0],
+        results["metadatas"][0],
+        results["distances"][0],
+    ):
+        retrieved_chunks.append(
+            {
+                "text": document,
+                "metadata": metadata,
+                "distance": distance,
+            }
+        )
+
+    return retrieved_chunks

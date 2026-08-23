@@ -1,6 +1,7 @@
 from trustquery.vectorstore.chroma_store import (
     add_chunks,
     get_collection,
+    search_chunks,
 )
 
 
@@ -54,6 +55,59 @@ def test_add_chunks_mismatched_lengths(tmp_path):
 
     try:
         add_chunks(collection, chunks, embeddings)
+        assert False
+    except ValueError:
+        assert True
+
+def test_search_chunks(tmp_path):
+    collection = get_collection(
+        collection_name="test_search",
+        persist_directory=str(tmp_path),
+    )
+
+    chunks = [
+        {
+            "text": "Multi-factor authentication is required.",
+            "source": "access_control.pdf",
+            "page": 1,
+        },
+        {
+            "text": "Backups are performed every day.",
+            "source": "backup_policy.pdf",
+            "page": 2,
+        },
+    ]
+
+    embeddings = [
+        [1.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0],
+    ]
+
+    add_chunks(collection, chunks, embeddings)
+
+    results = search_chunks(
+        collection,
+        query_embedding=[1.0, 0.0, 0.0],
+        top_k=1,
+    )
+
+    assert len(results) == 1
+    assert results[0]["text"] == "Multi-factor authentication is required."
+    assert results[0]["metadata"]["source"] == "access_control.pdf"
+    assert results[0]["metadata"]["page"] == 1
+
+def test_search_chunks_invalid_top_k(tmp_path):
+    collection = get_collection(
+        collection_name="test_invalid_search",
+        persist_directory=str(tmp_path),
+    )
+
+    try:
+        search_chunks(
+            collection,
+            query_embedding=[1.0, 0.0],
+            top_k=0,
+        )
         assert False
     except ValueError:
         assert True
