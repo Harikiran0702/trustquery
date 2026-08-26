@@ -45,4 +45,22 @@ def generate_grounded_answer(question, retrieved_chunks):
         retrieved_chunks=retrieved_chunks,
     )
 
-    return generate_text(prompt)
+    answer = generate_text(prompt)
+
+    if "Insufficient evidence" in answer:
+        return "Insufficient evidence in the provided documents."
+
+    has_source = "Source:" in answer
+    has_page = "Page:" in answer
+
+    if not (has_source and has_page):
+        top_metadata = retrieved_chunks[0].get("metadata", {})
+        source = top_metadata.get("source", "unknown")
+        page = top_metadata.get("page", "unknown")
+
+        answer = (
+            f"{answer.strip()}\n\n"
+            f"Source: {source}, Page: {page}"
+        )
+
+    return answer
