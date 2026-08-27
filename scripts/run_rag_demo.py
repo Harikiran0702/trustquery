@@ -2,7 +2,8 @@ from trustquery.embeddings.embedder import embed_texts
 from trustquery.generation.answer_generator import generate_grounded_answer
 from trustquery.ingestion.chunker import chunk_documents
 from trustquery.ingestion.loader import load_pdf
-from trustquery.retrieval.retriever import retrieve_chunks
+from trustquery.retrieval.hybrid_retriever import retrieve_and_rerank
+from trustquery.retrieval.reranker import load_reranker
 from trustquery.vectorstore.chroma_store import add_chunks, get_collection
 
 
@@ -46,29 +47,33 @@ def main():
         embeddings=embeddings,
     )
 
-    # 6. Ask question
+    # 6. Load CrossEncoder reranker
+    reranker_model = load_reranker()
+
+    # 7. Ask question
     question = "Does the company require multi-factor authentication?"
 
-    # 7. Retrieve relevant evidence
-    retrieved_chunks = retrieve_chunks(
-        collection=collection,
+    # 8. Hybrid retrieve + rerank
+    retrieved_chunks = retrieve_and_rerank(
         query=question,
-        top_k=3,
+        collection=collection,
+        chunks=chunks,
+        reranker_model=reranker_model,
+        top_k=2,
+        candidate_k=10,
     )
-
-    print("\nDEBUG RETRIEVED METADATA:")
-    print(retrieved_chunks[0]["metadata"])
 
     print("\nRETRIEVED EVIDENCE:")
 
     for index, chunk in enumerate(retrieved_chunks, start=1):
-        print(f"\nEvidence {index}")
-        print(f"Source: {chunk['metadata'].get('source')}")
-        print(f"Page: {chunk['metadata'].get('page')}")
-        print(f"Distance: {chunk['distance']:.4f}")
-        print(chunk["text"])
+        print(f"\nResult {index}")
+        print("Source:", chunk.get("metadata", {}).get("source"))
+        print("Page:", chunk.get("metadata", {}).get("page"))
+        print("RRF score:", chunk.get("rrf_score"))
+        print("Reranker score:", chunk.get("reranker_score"))
+        print("Text:", chunk["text"])
 
-    # 8. Generate grounded Gemini answer
+    # 9. Generate grounded Gemini answer
     answer = generate_grounded_answer(
         question=question,
         retrieved_chunks=retrieved_chunks,
