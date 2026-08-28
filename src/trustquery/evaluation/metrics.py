@@ -16,3 +16,18 @@ def retrieval_hit(
             return True
 
     return False
+def retrieval_hit_rate(results: list[dict]) -> float:
+    answerable_results = [
+        result for result in results
+        if result.get("should_answer") is True
+    ]
+
+    if not answerable_results:
+        return 0.0
+
+    hits = sum(
+        1 for result in answerable_results
+        if result.get("retrieval_hit") is True
+    )
+
+    return hits / len(answerable_results)
