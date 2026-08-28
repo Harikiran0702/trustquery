@@ -1,5 +1,4 @@
-from trustquery.evaluation.metrics import retrieval_hit
-
+from trustquery.evaluation.metrics import retrieval_hit, retrieval_hit_rate
 
 def test_retrieval_hit_returns_true_for_expected_source_and_page():
     chunks = [
@@ -61,3 +60,31 @@ def test_retrieval_hit_returns_false_when_no_expected_evidence():
         expected_source=None,
         expected_page=None,
     ) is False
+
+def test_retrieval_hit_rate():
+    results = [
+        {"should_answer": True, "retrieval_hit": True},
+        {"should_answer": True, "retrieval_hit": True},
+        {"should_answer": True, "retrieval_hit": True},
+        {"should_answer": True, "retrieval_hit": False},
+        {"should_answer": False, "retrieval_hit": False},
+    ]
+
+    assert retrieval_hit_rate(results) == 0.75
+
+
+def test_retrieval_hit_rate_all_hits():
+    results = [
+        {"should_answer": True, "retrieval_hit": True},
+        {"should_answer": True, "retrieval_hit": True},
+    ]
+
+    assert retrieval_hit_rate(results) == 1.0
+
+
+def test_retrieval_hit_rate_no_answerable_questions():
+    results = [
+        {"should_answer": False, "retrieval_hit": False},
+    ]
+
+    assert retrieval_hit_rate(results) == 0.0    
