@@ -57,3 +57,4 @@ data/uploads/
 # ChromaDB local data
 .chroma/
 .chroma_demo/
+.chroma_evaluation/
