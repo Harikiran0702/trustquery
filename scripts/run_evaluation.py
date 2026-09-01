@@ -1,6 +1,10 @@
 from trustquery.embeddings.embedder import embed_texts
 from trustquery.evaluation.dataset import load_golden_dataset
-from trustquery.evaluation.evaluator import evaluate_retrieval
+from trustquery.evaluation.evaluator import (
+    evaluate_generation,
+    evaluate_retrieval,
+)
+from trustquery.generation.answer_generator import generate_grounded_answer
 from trustquery.ingestion.chunker import chunk_documents
 from trustquery.ingestion.loader import load_pdf
 from trustquery.retrieval.hybrid_retriever import retrieve_and_rerank
@@ -62,7 +66,13 @@ def main():
         retrieve_fn=retrieve,
     )
 
-    # 9. Print report
+    generation_report = evaluate_generation(
+        dataset=dataset,
+        retrieve_fn=retrieve,
+        generate_fn=generate_grounded_answer,
+    )
+
+    # 9. Print retrieval evaluation report
     print("\nTrustQuery Retrieval Evaluation")
     print("=" * 40)
 
@@ -79,12 +89,14 @@ def main():
         )
 
     answerable = sum(
-        1 for result in report["results"]
+        1
+        for result in report["results"]
         if result["should_answer"]
     )
 
     hits = sum(
-        1 for result in report["results"]
+        1
+        for result in report["results"]
         if result["should_answer"]
         and result["retrieval_hit"]
     )
@@ -96,6 +108,29 @@ def main():
     print(
         f"Retrieval hit rate:   "
         f"{report['retrieval_hit_rate']:.2%}"
+    )
+
+    # 10. Generate answers for baseline evaluation
+    print("\nTrustQuery Generation Evaluation")
+    print("=" * 40)
+
+    for result in generation_report["results"]:
+        status = "PASS" if result["abstention_correct"] else "FAIL"
+
+        print(
+            f"{result['id']} | "
+            f"{status} | "
+            f"should_answer={result['should_answer']}"
+        )
+
+        print(f"Answer: {result['answer']}")
+        print()
+
+    print("Generation Summary")
+    print("-" * 40)
+    print(
+        f"Abstention accuracy: "
+        f"{generation_report['abstention_accuracy']:.2%}"
     )
 
 

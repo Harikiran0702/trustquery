@@ -1,4 +1,9 @@
-from trustquery.evaluation.metrics import retrieval_hit, retrieval_hit_rate
+from trustquery.evaluation.metrics import (
+    abstention_accuracy,
+    abstention_correct,
+    retrieval_hit,
+    retrieval_hit_rate,
+)
 
 def test_retrieval_hit_returns_true_for_expected_source_and_page():
     chunks = [
@@ -88,3 +93,53 @@ def test_retrieval_hit_rate_no_answerable_questions():
     ]
 
     assert retrieval_hit_rate(results) == 0.0    
+
+def test_abstention_correct_for_unsupported_question():
+    answer = "Insufficient evidence in the provided documents."
+
+    assert abstention_correct(
+        answer=answer,
+        should_answer=False,
+    ) is True
+
+
+def test_abstention_correct_when_supported_question_is_answered():
+    answer = "Yes, multi-factor authentication is required."
+
+    assert abstention_correct(
+        answer=answer,
+        should_answer=True,
+    ) is True
+
+
+def test_abstention_incorrect_when_unsupported_question_is_answered():
+    answer = "Yes, the company encrypts all data at rest."
+
+    assert abstention_correct(
+        answer=answer,
+        should_answer=False,
+    ) is False
+
+
+def test_abstention_incorrect_when_supported_question_is_refused():
+    answer = "Insufficient evidence in the provided documents."
+
+    assert abstention_correct(
+        answer=answer,
+        should_answer=True,
+    ) is False
+
+
+def test_abstention_accuracy():
+    results = [
+        {"abstention_correct": True},
+        {"abstention_correct": True},
+        {"abstention_correct": False},
+        {"abstention_correct": True},
+    ]
+
+    assert abstention_accuracy(results) == 0.75
+
+
+def test_abstention_accuracy_empty_results():
+    assert abstention_accuracy([]) == 0.0

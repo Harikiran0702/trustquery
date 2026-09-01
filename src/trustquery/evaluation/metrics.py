@@ -31,3 +31,33 @@ def retrieval_hit_rate(results: list[dict]) -> float:
     )
 
     return hits / len(answerable_results)
+
+def abstention_correct(
+    answer: str,
+    should_answer: bool,
+) -> bool:
+    normalized = answer.strip().lower()
+
+    abstained = (
+        "insufficient evidence" in normalized
+        or "not enough evidence" in normalized
+        or "cannot answer" in normalized
+    )
+
+    if should_answer:
+        return not abstained
+
+    return abstained
+
+
+def abstention_accuracy(results: list[dict]) -> float:
+    if not results:
+        return 0.0
+
+    correct = sum(
+        1
+        for result in results
+        if result.get("abstention_correct") is True
+    )
+
+    return correct / len(results)
