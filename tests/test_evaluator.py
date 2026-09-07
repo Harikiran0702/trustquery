@@ -1,8 +1,8 @@
 from trustquery.evaluation.evaluator import (
     evaluate_generation,
     evaluate_retrieval,
+    extract_citations,
 )
-
 
 def test_evaluate_retrieval():
     dataset = [
@@ -84,3 +84,39 @@ def test_evaluate_generation():
     assert report["results"][0]["abstention_correct"] is True
     assert report["results"][1]["abstention_correct"] is True
     assert report["abstention_accuracy"] == 1.0
+
+def test_extract_citations():
+    answer = (
+        "Yes. MFA is required.\n\n"
+        "Source: access_control_policy.pdf, Page: 1"
+    )
+
+    citations = extract_citations(answer)
+
+    assert citations == [
+        {
+            "source": "access_control_policy.pdf",
+            "page": 1,
+        }
+    ]
+
+
+def test_extract_citations_returns_empty_when_missing():
+    answer = "Insufficient evidence in the provided documents."
+
+    assert extract_citations(answer) == []
+
+def test_extract_citations_with_markdown_bold():
+    answer = (
+        "Yes.\n\n"
+        "**Source:** access_control_policy.pdf, Page: 1"
+    )
+
+    citations = extract_citations(answer)
+
+    assert citations == [
+        {
+            "source": "access_control_policy.pdf",
+            "page": 1,
+        }
+    ]    

@@ -58,3 +58,6 @@ data/uploads/
 .chroma/
 .chroma_demo/
 .chroma_evaluation/
+
+# Evaluation runtime cache
+data/eval/generation_cache.json

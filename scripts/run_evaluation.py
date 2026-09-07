@@ -11,15 +11,59 @@ from trustquery.retrieval.hybrid_retriever import retrieve_and_rerank
 from trustquery.retrieval.reranker import load_reranker
 from trustquery.vectorstore.chroma_store import add_chunks, get_collection
 
+from pathlib import Path
+
+from trustquery.evaluation.cache import (
+    load_generation_cache,
+    save_generation_cache,
+)
+
 
 PDF_PATH = "data/sample/access_control_policy.pdf"
 DATASET_PATH = "data/eval/golden_dataset.json"
+GENERATION_CACHE_PATH = Path("data/eval/generation_cache.json")
+
+def build_cached_generate_fn(cache: dict, cache_path: Path):
+    def cached_generate_fn(question, retrieved_chunks):
+        cache_key = question
+
+        if cache_key in cache:
+            return cache[cache_key]["answer"]
+
+        answer = generate_grounded_answer(
+            question=question,
+            retrieved_chunks=retrieved_chunks,
+        )
+
+        cache[cache_key] = {
+            "answer": answer,
+        }
+
+        save_generation_cache(
+            cache=cache,
+            cache_path=cache_path,
+        )
+
+        return answer
+
+    return cached_generate_fn
 
 
 def main():
     # 1. Load and chunk policy documents
     documents = load_pdf(PDF_PATH)
     chunks = chunk_documents(documents)
+
+    dataset = load_golden_dataset(DATASET_PATH)
+
+    generation_cache = load_generation_cache(
+        GENERATION_CACHE_PATH
+    )    
+
+    cached_generate_fn = build_cached_generate_fn(
+        cache=generation_cache,
+        cache_path=GENERATION_CACHE_PATH,
+    )
 
     # 2. Generate embeddings
     texts = [chunk["text"] for chunk in chunks]
@@ -69,7 +113,7 @@ def main():
     generation_report = evaluate_generation(
         dataset=dataset,
         retrieve_fn=retrieve,
-        generate_fn=generate_grounded_answer,
+        generate_fn=cached_generate_fn,
     )
 
     # 9. Print retrieval evaluation report
@@ -131,6 +175,16 @@ def main():
     print(
         f"Abstention accuracy: "
         f"{generation_report['abstention_accuracy']:.2%}"
+    )
+
+    print(
+    f"Citation Coverage: "
+    f"{generation_report['citation_coverage']:.2%}"
+    )
+
+    print(
+    f"Citation Correctness: "
+    f"{generation_report['citation_correctness']:.2%}"
     )
 
 

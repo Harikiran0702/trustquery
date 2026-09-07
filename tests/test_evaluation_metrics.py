@@ -3,6 +3,8 @@ from trustquery.evaluation.metrics import (
     abstention_correct,
     retrieval_hit,
     retrieval_hit_rate,
+    citation_correctness,
+    citation_coverage,
 )
 
 def test_retrieval_hit_returns_true_for_expected_source_and_page():
@@ -143,3 +145,130 @@ def test_abstention_accuracy():
 
 def test_abstention_accuracy_empty_results():
     assert abstention_accuracy([]) == 0.0
+
+def test_citation_coverage_answerable_with_citation():
+    citations = [
+        {
+            "source": "access_control_policy.pdf",
+            "page": 1,
+        }
+    ]
+
+    assert citation_coverage(
+        citations=citations,
+        should_answer=True,
+    ) == 1.0
+
+
+def test_citation_coverage_answerable_without_citation():
+    assert citation_coverage(
+        citations=[],
+        should_answer=True,
+    ) == 0.0
+
+
+def test_citation_coverage_unanswerable_without_citation():
+    assert citation_coverage(
+        citations=[],
+        should_answer=False,
+    ) == 1.0
+
+
+def test_citation_coverage_unanswerable_with_citation():
+    citations = [
+        {
+            "source": "access_control_policy.pdf",
+            "page": 1,
+        }
+    ]
+
+    assert citation_coverage(
+        citations=citations,
+        should_answer=False,
+    ) == 0.0
+
+
+def test_citation_correctness_matching_source_and_page():
+    citations = [
+        {
+            "source": "access_control_policy.pdf",
+            "page": 1,
+        }
+    ]
+
+    assert citation_correctness(
+        citations=citations,
+        expected_source="access_control_policy.pdf",
+        expected_page=1,
+        should_answer=True,
+    ) == 1.0
+
+
+def test_citation_correctness_wrong_page():
+    citations = [
+        {
+            "source": "access_control_policy.pdf",
+            "page": 2,
+        }
+    ]
+
+    assert citation_correctness(
+        citations=citations,
+        expected_source="access_control_policy.pdf",
+        expected_page=1,
+        should_answer=True,
+    ) == 0.0
+
+
+def test_citation_correctness_wrong_source():
+    citations = [
+        {
+            "source": "incident_response_policy.pdf",
+            "page": 1,
+        }
+    ]
+
+    assert citation_correctness(
+        citations=citations,
+        expected_source="access_control_policy.pdf",
+        expected_page=1,
+        should_answer=True,
+    ) == 0.0
+
+
+def test_citation_correctness_one_of_multiple_matches():
+    citations = [
+        {
+            "source": "wrong_document.pdf",
+            "page": 3,
+        },
+        {
+            "source": "access_control_policy.pdf",
+            "page": 1,
+        },
+    ]
+
+    assert citation_correctness(
+        citations=citations,
+        expected_source="access_control_policy.pdf",
+        expected_page=1,
+        should_answer=True,
+    ) == 1.0
+
+
+def test_citation_correctness_missing_citation():
+    assert citation_correctness(
+        citations=[],
+        expected_source="access_control_policy.pdf",
+        expected_page=1,
+        should_answer=True,
+    ) == 0.0
+
+
+def test_citation_correctness_unanswerable_without_citation():
+    assert citation_correctness(
+        citations=[],
+        expected_source=None,
+        expected_page=None,
+        should_answer=False,
+    ) == 1.0
