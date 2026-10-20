@@ -207,3 +207,42 @@ def test_faithfulness_score_rejects_unequal_lengths():
     ):
         with pytest.raises(ValueError, match="equal lengths"):
             faithfulness_score(claims, supported)
+
+
+def test_extract_claims_cached_q001_inline_citation():
+    assert extract_claims(
+        "Yes, multi-factor authentication is required for administrative access "
+        "(Source: access_control_policy.pdf, Page: 1)."
+    ) == ["Yes, multi-factor authentication is required for administrative access."]
+
+
+@pytest.mark.parametrize("citation", [
+    "(Source: access_control_policy.pdf, Page: 1)",
+    "[Source: access_control_policy.pdf, Page: 12]",
+    "(source : access_control_policy.pdf, PAGE : 2)",
+    "(**Source:** access_control_policy.pdf, **Page:** 1)",
+    "[__Source__: access_control_policy.pdf, __Page__: 1]",
+    "Source: access_control_policy.pdf, Page: 1",
+    "**Source:** access_control_policy.pdf, Page: 1",
+])
+def test_extract_claims_inline_citations_preserve_surrounding_facts(citation):
+    assert extract_claims(f"Access {citation} is restricted.") == [
+        "Access is restricted.",
+    ]
+    assert extract_claims(f"Access is restricted {citation}. Changes are audited.") == [
+        "Access is restricted.", "Changes are audited.",
+    ]
+    assert extract_claims(f"Access is restricted. {citation} Changes are audited.") == [
+        "Access is restricted.", "Changes are audited.",
+    ]
+    assert extract_claims(citation) == []
+
+
+@pytest.mark.parametrize("statement", [
+    "The Source: field and Page: field identify evidence.",
+    "Access (Source: policy guidance) is restricted.",
+    "Access (Page: 1) is restricted.",
+    "Access (Source: policy.pdf, Page: 1 requires approval) is restricted.",
+])
+def test_extract_claims_preserves_non_citation_source_page_text(statement):
+    assert extract_claims(statement) == [statement]

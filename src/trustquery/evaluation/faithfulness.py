@@ -19,6 +19,26 @@ def extract_claims(answer: str) -> list[str]:
     content = "\n".join(
         line for line in answer.splitlines() if not citation_line.match(line)
     )
+    # Match explicit source/page pairs only, preserving surrounding facts.
+    emphasis = r"(?:\*\*|__|\*|_)?"
+    source = rf"{emphasis}Source{emphasis}\s*:{emphasis}\s*"
+    page = rf"{emphasis}Page{emphasis}\s*:{emphasis}\s*\d+{emphasis}"
+    pair = rf"{source}[^\n()\[\]]+?,\s*{page}"
+    content = re.sub(
+        rf"\(\s*{pair}\s*\)|\[\s*{pair}\s*\]", "", content,
+        flags=re.IGNORECASE,
+    )
+    # Unwrapped citations require a filename to avoid consuming ordinary prose.
+    parts = re.split(r"(\([^\n()]*\)|\[[^\n\[\]]*\])", content)
+    content = "".join(
+        part if part.startswith(("(", "[")) else re.sub(
+            rf"{source}[\w./\\ -]+\.pdf\s*,\s*{page}(?![\w-])",
+            "", part, flags=re.IGNORECASE,
+        )
+        for part in parts
+    )
+    content = re.sub(r"[ \t]+([.!?,;:])", r"\1", content)
+    content = re.sub(r"[ \t]{2,}", " ", content)
     claims = []
     for sentence in re.split(r"(?<=[.!?])\s+", content.strip()):
         sentence = sentence.strip()
