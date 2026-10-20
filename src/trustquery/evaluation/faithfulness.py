@@ -59,6 +59,7 @@ class ClaimVerification:
     claim: str
     supported: bool
     evidence: tuple[ChunkVerification, ...]
+    conflicted: bool = False
 
 
 @dataclass(frozen=True)
@@ -75,8 +76,9 @@ def answer_faithfulness(
     """Verify extracted claims against each retrieved chunk independently.
 
     The caller supplies the relevant retrieved set; no further relevance filter
-    is applied. Any entailment supports a claim, even if another chunk contradicts
-    it; all verdicts and source/page/chunk metadata remain available for inspection.
+    is applied. A claim is conflicted when chunks both entail and contradict it.
+    Only entailment without contradiction supports a claim; all verdicts and
+    source/page/chunk metadata remain available for inspection.
     No evidence means unsupported claims. No claims means score zero, not success.
 
     Validate all chunks before inference, even for an empty answer. Metadata may
@@ -117,9 +119,11 @@ def answer_faithfulness(
                     f"evidence chunk {index}: {exc}"
                 ) from exc
             evidence.append(ChunkVerification(index, dict(metadata), verdict))
+        entailed = any(item.result.label == "entailment" for item in evidence)
+        contradicted = any(item.result.label == "contradiction" for item in evidence)
         results.append(ClaimVerification(
-            claim, any(item.result.label == "entailment" for item in evidence),
-            tuple(evidence),
+            claim, entailed and not contradicted, tuple(evidence),
+            conflicted=entailed and contradicted,
         ))
     return AnswerFaithfulness(
         faithfulness_score(claims, [item.supported for item in results]),
