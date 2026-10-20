@@ -1,4 +1,8 @@
 import re
+from dataclasses import asdict
+
+from trustquery.evaluation.faithfulness import answer_faithfulness
+from trustquery.evaluation.nli import NLIBackend
 
 from trustquery.evaluation.metrics import (
     abstention_accuracy,
@@ -47,7 +51,19 @@ def evaluate_generation(
     dataset: list[dict],
     retrieve_fn,
     generate_fn,
+    *,
+    nli_backend: NLIBackend | None = None,
 ) -> dict:
+    """Evaluate generation, optionally verifying claims with an injected backend.
+
+    No backend is loaded here. With scoring disabled, scores are None. When
+    enabled, the aggregate is the mean over ALL answerable cases, including
+    zero for empty/abstaining/no-claim/missing-evidence answers. Non-answerable
+    cases still receive details but are excluded from that mean. No answerable
+    cases yields None. Counts expose how many cases received NLI verdicts.
+    Abstention uses the existing metric's phrase heuristic. NLI/validation
+    failures propagate rather than returning a partial or successful report.
+    """
     results = []
 
     for item in dataset:
@@ -79,6 +95,38 @@ def evaluate_generation(
             should_answer=item["should_answer"],
         )
 
+        faithfulness = {
+            "faithfulness_score": None,
+            "faithfulness_status": "disabled",
+            "faithfulness_claims": [],
+        }
+        if nli_backend is not None:
+            # Reuse the existing abstention definition without changing metrics.
+            abstained = abstention_correct(answer, should_answer=False)
+            if not answer.strip():
+                status = "empty_answer"
+            elif abstained:
+                status = "abstained"
+            else:
+                status = "scored"
+            if status == "scored":
+                verification = answer_faithfulness(
+                    answer, retrieved_chunks, nli_backend,
+                )
+                faithfulness["faithfulness_claims"] = [
+                    asdict(claim) for claim in verification.claims
+                ]
+                score = verification.score
+                if not verification.claims:
+                    status = "no_claims"
+                elif not retrieved_chunks:
+                    status = "missing_evidence"
+            else:
+                score = 0.0
+            faithfulness.update(
+                faithfulness_score=score, faithfulness_status=status,
+            )
+
         results.append(
             {
                 "id": item["id"],
@@ -87,6 +135,7 @@ def evaluate_generation(
                 "expected_source": item["expected_source"],
                 "expected_page": item["expected_page"],
                 "answer": answer,
+                **faithfulness,
                 "citations": citations,
                 "abstention_correct": correct,
                 "citation_coverage": coverage,
@@ -125,6 +174,20 @@ def evaluate_generation(
         "abstention_accuracy": abstention_accuracy(results),
         "citation_coverage": citation_coverage_rate,
         "citation_correctness": citation_correctness_rate,
+        "faithfulness_score": (
+            sum(result["faithfulness_score"] for result in answerable_results)
+            / len(answerable_results)
+            if nli_backend is not None and answerable_results else None
+        ),
+        "faithfulness_answerable_count": len(answerable_results),
+        "faithfulness_scored_count": sum(
+            result["faithfulness_status"] == "scored"
+            for result in answerable_results
+        ),
+        "faithfulness_unscored_count": sum(
+            result["faithfulness_status"] != "scored"
+            for result in answerable_results
+        ),
     }
 
 def extract_citations(answer: str) -> list[dict]:

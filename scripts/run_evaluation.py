@@ -49,7 +49,8 @@ def build_cached_generate_fn(cache: dict, cache_path: Path):
     return cached_generate_fn
 
 
-def main():
+def main(*, nli_backend=None):
+    """Optionally accept a preloaded NLI backend; never load one implicitly."""
     # 1. Load and chunk policy documents
     documents = load_pdf(PDF_PATH)
     chunks = chunk_documents(documents)
@@ -114,6 +115,7 @@ def main():
         dataset=dataset,
         retrieve_fn=retrieve,
         generate_fn=cached_generate_fn,
+        nli_backend=nli_backend,
     )
 
     # 9. Print retrieval evaluation report
@@ -168,6 +170,10 @@ def main():
         )
 
         print(f"Answer: {result['answer']}")
+        print(
+            f"Faithfulness: {result['faithfulness_score']} "
+            f"({result['faithfulness_status']})"
+        )
         print()
 
     print("Generation Summary")
@@ -185,6 +191,14 @@ def main():
     print(
     f"Citation Correctness: "
     f"{generation_report['citation_correctness']:.2%}"
+    )
+
+    score = generation_report["faithfulness_score"]
+    print(f"Faithfulness: {score if score is not None else 'N/A'}")
+    print(
+        f"Answerable cases with NLI verdicts: "
+        f"{generation_report['faithfulness_scored_count']}/"
+        f"{generation_report['faithfulness_answerable_count']}"
     )
 
 
