@@ -1,0 +1,497 @@
+{
+  "schema_version": 1,
+  "dataset": "evidence_selection_seed.json",
+  "status": "user_approved",
+  "reviews": [
+    {
+      "case_id": "q002-baseline",
+      "evidence_id": "q002-baseline-p1",
+      "status": "user_approved",
+      "reviewer": "user (chat approval)",
+      "reviewed_at": null,
+      "human_verified": true,
+      "proposed": {
+        "claim": "Yes, all employees are required to use unique user accounts.",
+        "evidence_text": "CloudDesk Access Control Policy All employees must use unique user accounts. Multi-factor authentication is required for administrative access.",
+        "source": "access_control_policy.pdf",
+        "page": 1,
+        "relationship": "entailment",
+        "relevant_to_claim": true,
+        "provenance": {
+          "kind": "local_pdf_snapshot",
+          "origin": "data/sample/access_control_policy.pdf",
+          "synthetic": false,
+          "annotation_status": "provisional_model_authored",
+          "human_verified": false,
+          "requires_user_review": true
+        },
+        "rationale": "The policy explicitly states the claim.",
+        "genuine_conflict_exists": false
+      },
+      "decision": {
+        "relationship": "entailment",
+        "relevant_to_claim": true,
+        "approval_context": "Explicit per-pair user approvals, restated in the continuation request for Project status update (conversation 6ad116c3-4194-83e8-a8f8-729f5fac56ac).",
+        "unresolved_fields": [
+          "reviewer_legal_name",
+          "exact_review_timestamp"
+        ]
+      }
+    },
+    {
+      "case_id": "q002-baseline",
+      "evidence_id": "q002-baseline-p2",
+      "status": "user_approved",
+      "reviewer": "user (chat approval)",
+      "reviewed_at": null,
+      "human_verified": true,
+      "proposed": {
+        "claim": "Yes, all employees are required to use unique user accounts.",
+        "evidence_text": "Access Review CloudDesk reviews user access permissions every quarter. Terminated employee access is revoked within 24 hours.",
+        "source": "access_control_policy.pdf",
+        "page": 2,
+        "relationship": "neutral",
+        "relevant_to_claim": false,
+        "provenance": {
+          "kind": "local_pdf_snapshot",
+          "origin": "data/sample/access_control_policy.pdf",
+          "synthetic": false,
+          "annotation_status": "provisional_model_authored",
+          "human_verified": false,
+          "requires_user_review": true
+        },
+        "rationale": "This page neither establishes nor denies the claim; shared organization or access vocabulary alone is insufficient.",
+        "genuine_conflict_exists": false
+      },
+      "decision": {
+        "relationship": "neutral",
+        "relevant_to_claim": false,
+        "approval_context": "Explicit per-pair user approvals, restated in the continuation request for Project status update (conversation 6ad116c3-4194-83e8-a8f8-729f5fac56ac).",
+        "unresolved_fields": [
+          "reviewer_legal_name",
+          "exact_review_timestamp"
+        ]
+      }
+    },
+    {
+      "case_id": "mfa-conflict",
+      "evidence_id": "mfa-conflict-p1",
+      "status": "user_approved",
+      "reviewer": "user (chat approval)",
+      "reviewed_at": null,
+      "human_verified": true,
+      "proposed": {
+        "claim": "Multi-factor authentication is required for administrative access.",
+        "evidence_text": "CloudDesk Access Control Policy All employees must use unique user accounts. Multi-factor authentication is required for administrative access.",
+        "source": "access_control_policy.pdf",
+        "page": 1,
+        "relationship": "entailment",
+        "relevant_to_claim": true,
+        "provenance": {
+          "kind": "local_pdf_snapshot",
+          "origin": "data/sample/access_control_policy.pdf",
+          "synthetic": false,
+          "annotation_status": "provisional_model_authored",
+          "human_verified": false,
+          "requires_user_review": true
+        },
+        "rationale": "The policy explicitly states the claim.",
+        "genuine_conflict_exists": true
+      },
+      "decision": {
+        "relationship": "entailment",
+        "relevant_to_claim": true,
+        "approval_context": "Explicit per-pair user approvals, restated in the continuation request for Project status update (conversation 6ad116c3-4194-83e8-a8f8-729f5fac56ac).",
+        "unresolved_fields": [
+          "reviewer_legal_name",
+          "exact_review_timestamp"
+        ]
+      }
+    },
+    {
+      "case_id": "mfa-conflict",
+      "evidence_id": "mfa-conflict-p2",
+      "status": "user_approved",
+      "reviewer": "user (chat approval)",
+      "reviewed_at": null,
+      "human_verified": true,
+      "proposed": {
+        "claim": "Multi-factor authentication is required for administrative access.",
+        "evidence_text": "Access Review CloudDesk reviews user access permissions every quarter. Terminated employee access is revoked within 24 hours.",
+        "source": "access_control_policy.pdf",
+        "page": 2,
+        "relationship": "neutral",
+        "relevant_to_claim": false,
+        "provenance": {
+          "kind": "local_pdf_snapshot",
+          "origin": "data/sample/access_control_policy.pdf",
+          "synthetic": false,
+          "annotation_status": "provisional_model_authored",
+          "human_verified": false,
+          "requires_user_review": true
+        },
+        "rationale": "This page neither establishes nor denies the claim; shared organization or access vocabulary alone is insufficient.",
+        "genuine_conflict_exists": true
+      },
+      "decision": {
+        "relationship": "neutral",
+        "relevant_to_claim": false,
+        "approval_context": "Explicit per-pair user approvals, restated in the continuation request for Project status update (conversation 6ad116c3-4194-83e8-a8f8-729f5fac56ac).",
+        "unresolved_fields": [
+          "reviewer_legal_name",
+          "exact_review_timestamp"
+        ]
+      }
+    },
+    {
+      "case_id": "mfa-conflict",
+      "evidence_id": "mfa-conflict-s1",
+      "status": "user_approved",
+      "reviewer": "user (chat approval)",
+      "reviewed_at": null,
+      "human_verified": true,
+      "proposed": {
+        "claim": "Multi-factor authentication is required for administrative access.",
+        "evidence_text": "SYNTHETIC CloudDesk policy: Multi-factor authentication is not required for administrative access. Administrators may sign in with only a password.",
+        "source": "SYNTHETIC-mfa-conflict",
+        "page": 1,
+        "relationship": "contradiction",
+        "relevant_to_claim": true,
+        "provenance": {
+          "kind": "synthetic_policy",
+          "origin": "authored_for_this_fixture",
+          "synthetic": true,
+          "annotation_status": "provisional_model_authored",
+          "human_verified": false,
+          "requires_user_review": true
+        },
+        "rationale": "The synthetic policy explicitly denies the same requirement or frequency under the stated same-scope assumption.",
+        "genuine_conflict_exists": true
+      },
+      "decision": {
+        "relationship": "contradiction",
+        "relevant_to_claim": true,
+        "approval_context": "Explicit per-pair user approvals, restated in the continuation request for Project status update (conversation 6ad116c3-4194-83e8-a8f8-729f5fac56ac).",
+        "unresolved_fields": [
+          "reviewer_legal_name",
+          "exact_review_timestamp"
+        ]
+      }
+    },
+    {
+      "case_id": "review-conflict",
+      "evidence_id": "review-conflict-p1",
+      "status": "user_approved",
+      "reviewer": "user (chat approval)",
+      "reviewed_at": null,
+      "human_verified": true,
+      "proposed": {
+        "claim": "CloudDesk reviews user access permissions every quarter.",
+        "evidence_text": "CloudDesk Access Control Policy All employees must use unique user accounts. Multi-factor authentication is required for administrative access.",
+        "source": "access_control_policy.pdf",
+        "page": 1,
+        "relationship": "neutral",
+        "relevant_to_claim": false,
+        "provenance": {
+          "kind": "local_pdf_snapshot",
+          "origin": "data/sample/access_control_policy.pdf",
+          "synthetic": false,
+          "annotation_status": "provisional_model_authored",
+          "human_verified": false,
+          "requires_user_review": true
+        },
+        "rationale": "This page neither establishes nor denies the claim; shared organization or access vocabulary alone is insufficient.",
+        "genuine_conflict_exists": true
+      },
+      "decision": {
+        "relationship": "neutral",
+        "relevant_to_claim": false,
+        "approval_context": "Explicit per-pair user approvals, restated in the continuation request for Project status update (conversation 6ad116c3-4194-83e8-a8f8-729f5fac56ac).",
+        "unresolved_fields": [
+          "reviewer_legal_name",
+          "exact_review_timestamp"
+        ]
+      }
+    },
+    {
+      "case_id": "review-conflict",
+      "evidence_id": "review-conflict-p2",
+      "status": "user_approved",
+      "reviewer": "user (chat approval)",
+      "reviewed_at": null,
+      "human_verified": true,
+      "proposed": {
+        "claim": "CloudDesk reviews user access permissions every quarter.",
+        "evidence_text": "Access Review CloudDesk reviews user access permissions every quarter. Terminated employee access is revoked within 24 hours.",
+        "source": "access_control_policy.pdf",
+        "page": 2,
+        "relationship": "entailment",
+        "relevant_to_claim": true,
+        "provenance": {
+          "kind": "local_pdf_snapshot",
+          "origin": "data/sample/access_control_policy.pdf",
+          "synthetic": false,
+          "annotation_status": "provisional_model_authored",
+          "human_verified": false,
+          "requires_user_review": true
+        },
+        "rationale": "The policy explicitly states the claim.",
+        "genuine_conflict_exists": true
+      },
+      "decision": {
+        "relationship": "entailment",
+        "relevant_to_claim": true,
+        "approval_context": "Explicit per-pair user approvals, restated in the continuation request for Project status update (conversation 6ad116c3-4194-83e8-a8f8-729f5fac56ac).",
+        "unresolved_fields": [
+          "reviewer_legal_name",
+          "exact_review_timestamp"
+        ]
+      }
+    },
+    {
+      "case_id": "review-conflict",
+      "evidence_id": "review-conflict-s1",
+      "status": "user_approved",
+      "reviewer": "user (chat approval)",
+      "reviewed_at": null,
+      "human_verified": true,
+      "proposed": {
+        "claim": "CloudDesk reviews user access permissions every quarter.",
+        "evidence_text": "SYNTHETIC CloudDesk policy: User access permissions are reviewed only once per year, not every quarter.",
+        "source": "SYNTHETIC-review-conflict",
+        "page": 1,
+        "relationship": "contradiction",
+        "relevant_to_claim": true,
+        "provenance": {
+          "kind": "synthetic_policy",
+          "origin": "authored_for_this_fixture",
+          "synthetic": true,
+          "annotation_status": "provisional_model_authored",
+          "human_verified": false,
+          "requires_user_review": true
+        },
+        "rationale": "The synthetic policy explicitly denies the same requirement or frequency under the stated same-scope assumption.",
+        "genuine_conflict_exists": true
+      },
+      "decision": {
+        "relationship": "contradiction",
+        "relevant_to_claim": true,
+        "approval_context": "Explicit per-pair user approvals, restated in the continuation request for Project status update (conversation 6ad116c3-4194-83e8-a8f8-729f5fac56ac).",
+        "unresolved_fields": [
+          "reviewer_legal_name",
+          "exact_review_timestamp"
+        ]
+      }
+    },
+    {
+      "case_id": "revocation-supported",
+      "evidence_id": "revocation-supported-p1",
+      "status": "user_approved",
+      "reviewer": "user (chat approval)",
+      "reviewed_at": null,
+      "human_verified": true,
+      "proposed": {
+        "claim": "Terminated employee access is revoked within 24 hours.",
+        "evidence_text": "CloudDesk Access Control Policy All employees must use unique user accounts. Multi-factor authentication is required for administrative access.",
+        "source": "access_control_policy.pdf",
+        "page": 1,
+        "relationship": "neutral",
+        "relevant_to_claim": false,
+        "provenance": {
+          "kind": "local_pdf_snapshot",
+          "origin": "data/sample/access_control_policy.pdf",
+          "synthetic": false,
+          "annotation_status": "provisional_model_authored",
+          "human_verified": false,
+          "requires_user_review": true
+        },
+        "rationale": "This page neither establishes nor denies the claim; shared organization or access vocabulary alone is insufficient.",
+        "genuine_conflict_exists": false
+      },
+      "decision": {
+        "relationship": "neutral",
+        "relevant_to_claim": false,
+        "approval_context": "Explicit per-pair user approvals, restated in the continuation request for Project status update (conversation 6ad116c3-4194-83e8-a8f8-729f5fac56ac).",
+        "unresolved_fields": [
+          "reviewer_legal_name",
+          "exact_review_timestamp"
+        ]
+      }
+    },
+    {
+      "case_id": "revocation-supported",
+      "evidence_id": "revocation-supported-p2",
+      "status": "user_approved",
+      "reviewer": "user (chat approval)",
+      "reviewed_at": null,
+      "human_verified": true,
+      "proposed": {
+        "claim": "Terminated employee access is revoked within 24 hours.",
+        "evidence_text": "Access Review CloudDesk reviews user access permissions every quarter. Terminated employee access is revoked within 24 hours.",
+        "source": "access_control_policy.pdf",
+        "page": 2,
+        "relationship": "entailment",
+        "relevant_to_claim": true,
+        "provenance": {
+          "kind": "local_pdf_snapshot",
+          "origin": "data/sample/access_control_policy.pdf",
+          "synthetic": false,
+          "annotation_status": "provisional_model_authored",
+          "human_verified": false,
+          "requires_user_review": true
+        },
+        "rationale": "The policy explicitly states the claim.",
+        "genuine_conflict_exists": false
+      },
+      "decision": {
+        "relationship": "entailment",
+        "relevant_to_claim": true,
+        "approval_context": "Explicit per-pair user approvals, restated in the continuation request for Project status update (conversation 6ad116c3-4194-83e8-a8f8-729f5fac56ac).",
+        "unresolved_fields": [
+          "reviewer_legal_name",
+          "exact_review_timestamp"
+        ]
+      }
+    },
+    {
+      "case_id": "encryption-unsupported",
+      "evidence_id": "encryption-unsupported-p1",
+      "status": "user_approved",
+      "reviewer": "user (chat approval)",
+      "reviewed_at": null,
+      "human_verified": true,
+      "proposed": {
+        "claim": "CloudDesk encrypts all data at rest.",
+        "evidence_text": "CloudDesk Access Control Policy All employees must use unique user accounts. Multi-factor authentication is required for administrative access.",
+        "source": "access_control_policy.pdf",
+        "page": 1,
+        "relationship": "neutral",
+        "relevant_to_claim": false,
+        "provenance": {
+          "kind": "local_pdf_snapshot",
+          "origin": "data/sample/access_control_policy.pdf",
+          "synthetic": false,
+          "annotation_status": "provisional_model_authored",
+          "human_verified": false,
+          "requires_user_review": true
+        },
+        "rationale": "This page neither establishes nor denies the claim; shared organization or access vocabulary alone is insufficient.",
+        "genuine_conflict_exists": false
+      },
+      "decision": {
+        "relationship": "neutral",
+        "relevant_to_claim": false,
+        "approval_context": "Explicit per-pair user approvals, restated in the continuation request for Project status update (conversation 6ad116c3-4194-83e8-a8f8-729f5fac56ac).",
+        "unresolved_fields": [
+          "reviewer_legal_name",
+          "exact_review_timestamp"
+        ]
+      }
+    },
+    {
+      "case_id": "encryption-unsupported",
+      "evidence_id": "encryption-unsupported-p2",
+      "status": "user_approved",
+      "reviewer": "user (chat approval)",
+      "reviewed_at": null,
+      "human_verified": true,
+      "proposed": {
+        "claim": "CloudDesk encrypts all data at rest.",
+        "evidence_text": "Access Review CloudDesk reviews user access permissions every quarter. Terminated employee access is revoked within 24 hours.",
+        "source": "access_control_policy.pdf",
+        "page": 2,
+        "relationship": "neutral",
+        "relevant_to_claim": false,
+        "provenance": {
+          "kind": "local_pdf_snapshot",
+          "origin": "data/sample/access_control_policy.pdf",
+          "synthetic": false,
+          "annotation_status": "provisional_model_authored",
+          "human_verified": false,
+          "requires_user_review": true
+        },
+        "rationale": "This page neither establishes nor denies the claim; shared organization or access vocabulary alone is insufficient.",
+        "genuine_conflict_exists": false
+      },
+      "decision": {
+        "relationship": "neutral",
+        "relevant_to_claim": false,
+        "approval_context": "Explicit per-pair user approvals, restated in the continuation request for Project status update (conversation 6ad116c3-4194-83e8-a8f8-729f5fac56ac).",
+        "unresolved_fields": [
+          "reviewer_legal_name",
+          "exact_review_timestamp"
+        ]
+      }
+    },
+    {
+      "case_id": "accounts-contradiction-with-neutral",
+      "evidence_id": "accounts-contradiction-with-neutral-p2",
+      "status": "user_approved",
+      "reviewer": "user (chat approval)",
+      "reviewed_at": null,
+      "human_verified": true,
+      "proposed": {
+        "claim": "Yes, all employees are required to use unique user accounts.",
+        "evidence_text": "Access Review CloudDesk reviews user access permissions every quarter. Terminated employee access is revoked within 24 hours.",
+        "source": "access_control_policy.pdf",
+        "page": 2,
+        "relationship": "neutral",
+        "relevant_to_claim": false,
+        "provenance": {
+          "kind": "local_pdf_snapshot",
+          "origin": "data/sample/access_control_policy.pdf",
+          "synthetic": false,
+          "annotation_status": "provisional_model_authored",
+          "human_verified": false,
+          "requires_user_review": true
+        },
+        "rationale": "This page neither establishes nor denies the claim; shared organization or access vocabulary alone is insufficient.",
+        "genuine_conflict_exists": false
+      },
+      "decision": {
+        "relationship": "neutral",
+        "relevant_to_claim": false,
+        "approval_context": "Explicit per-pair user approvals, restated in the continuation request for Project status update (conversation 6ad116c3-4194-83e8-a8f8-729f5fac56ac).",
+        "unresolved_fields": [
+          "reviewer_legal_name",
+          "exact_review_timestamp"
+        ]
+      }
+    },
+    {
+      "case_id": "accounts-contradiction-with-neutral",
+      "evidence_id": "accounts-contradiction-with-neutral-s1",
+      "status": "user_approved",
+      "reviewer": "user (chat approval)",
+      "reviewed_at": null,
+      "human_verified": true,
+      "proposed": {
+        "claim": "Yes, all employees are required to use unique user accounts.",
+        "evidence_text": "SYNTHETIC CloudDesk policy: Employees are not required to use unique user accounts. Employees may share a single user account.",
+        "source": "SYNTHETIC-accounts-contradiction-with-neutral",
+        "page": 1,
+        "relationship": "contradiction",
+        "relevant_to_claim": true,
+        "provenance": {
+          "kind": "synthetic_policy",
+          "origin": "authored_for_this_fixture",
+          "synthetic": true,
+          "annotation_status": "provisional_model_authored",
+          "human_verified": false,
+          "requires_user_review": true
+        },
+        "rationale": "The synthetic policy explicitly denies the same requirement or frequency under the stated same-scope assumption.",
+        "genuine_conflict_exists": false
+      },
+      "decision": {
+        "relationship": "contradiction",
+        "relevant_to_claim": true,
+        "approval_context": "Explicit per-pair user approvals, restated in the continuation request for Project status update (conversation 6ad116c3-4194-83e8-a8f8-729f5fac56ac).",
+        "unresolved_fields": [
+          "reviewer_legal_name",
+          "exact_review_timestamp"
+        ]
+      }
+    }
+  ]
+}
