@@ -93,3 +93,72 @@ def test_bm25_retrieval_across_three_policies(query, page, answer):
                         and d["page"] == chunk["metadata"]["page"])
         assert chunk["text"] in original["text"]
         assert isinstance(chunk["metadata"]["chunk_index"], int)
+
+
+
+@pytest.mark.parametrize('page,section,fragments', [
+    (0, 0, ('Proposed effective date', 'Planned next review', 'approval not recorded')),
+    (0, 1, ('fictional 75-person B2B SaaS', 'has not been approved', 'no SOC 2 report', 'ISO certification', 'legal compliance conclusion')),
+    (0, 2, ('confidentiality, integrity and availability', 'measurable security objectives annually', 'CTO approval and progress')),
+    (0, 3, ('CTO must set security direction, provide resources and accept risks', 'risk register and internal reviews', 'Managers must coordinate training', 'report suspected exposure promptly')),
+    (1, 0, ('at least annually', 'before material service changes', 'before onboarding vendors', 'likelihood, impact', 'residual risk', 'risk ID, owner, treatment, due date, acceptance decision and review date', 'Review open risks quarterly', 'overdue high-impact actions')),
+    (1, 1, ('systems, devices, services, data stores and vendors', 'owner, business purpose, classification and dependencies', 'acquired, materially changed or retired', 'no actual asset list')),
+    (1, 2, ('Public', 'Internal', 'Confidential', 'Restricted', 'highest applicable class', 'authorized recipients through approved channels', 'Check recipients and limit copies', 'Never put secrets in source code, logs or support exports')),
+    (1, 3, ('customer commitments and applicable obligations', 'Record approved periods and any holds', 'verified deletion or secure media disposal', 'no retention periods or backup schedules', 'Public marketing content may be stored unencrypted', 'administrative and authentication traffic')),
+    (2, 0, ('unique user accounts', 'multi-factor authentication for administrative access', 'every quarter', 'within 24 hours', 'requests, approvals and revocation records')),
+    (2, 1, ('TLS 1.2 or TLS 1.3', 'AES-256', 'managed KMS', 'every 12 months', 'dependent data or backups', 'grant, certificate, secrets and destruction', 'not assumed capabilities')),
+    (2, 2, ('at onboarding and annually thereafter', 'phishing, safe sharing, credential protection, incident reporting and classification', 'role-specific guidance', 'attendance, completion and overdue follow-up', 'not evidence of completed training')),
+    (2, 3, ('assess each vendor before it handles', 'data access, service criticality', 'CTO must accept material residual risk before use', 'confidentiality, incident communication, access termination and data return or deletion', 'Reassess critical vendors annually', 'material changes or incidents', 'exit dependencies')),
+    (3, 0, ('promptly report', 'no live address or staffed response service', 'triage, severity, containment, evidence preservation', 'authorize external communications', 'case by case', 'no universal notification deadline')),
+    (3, 1, ('discovery time, affected assets and information, decisions, responders, containment, recovery and corrective actions', 'Restrict evidence access', 'logs and decision history', 'remediation owners and due dates, with CTO review', 'emergency access and key-recovery safeguards')),
+    (3, 2, ('critical services, dependencies, disruption scenarios and recovery priorities', 'CTO must approve', 'after impact assessment', 'no numerical targets or availability guarantees', 'responsibilities, dependencies and communication plans', 'at least annually and after material changes', 'gaps and corrective actions')),
+    (3, 3, ('backup-specific key grants', 'retention of keys needed for recovery', 'at least quarterly', 'integrity, authorized key access and outcome', 'approved continuity objectives', 'no backup schedules, data retention periods or successful restore history')),
+    (4, 0, ('annual internal review', 'report findings and corrective actions to the CTO', 'owners, due dates and closure evidence', 'Review open findings quarterly', 'quarterly access reviews', 'monthly KMS administrative and decrypt audit-event reviews', 'not an independent audit or certification')),
+    (4, 1, ('Before deviating', 'affected assets and data', 'rationale, risk, compensating safeguards, owner and expiry', 'CTO must approve or reject', 'within 90 days', 'reviewed monthly', 'fresh assessment and approval', 'next business day', 'authoritative for encryption exceptions and destructive key approvals', 'no active exception')),
+    (4, 2, ('access-restricted repository', 'ownership, version history and approved retention schedules', 'minimum 12-month retention for KMS audit logs', 'does not apply to all records', 'no completed evidence or approval signatures')),
+    (4, 3, ('follow approved policy requirements', 'report suspected violations', 'proportionate corrective action', 'agreements and employment processes', 'No automatic sanction', 'annually and after material incidents or business or technology changes', 'revisions, reviewer feedback and CTO approval', 'requires_user_review', 'not_recorded')),
+])
+def test_plain_language_revision_preserves_obligations_and_limits(page, section, fragments):
+    source = json.loads(PDF.with_suffix('.json').read_text(encoding='utf-8'))
+    assert all(fragment in source['pages'][page]['sections'][section]['text'] for fragment in fragments)
+
+
+def test_dates_and_metadata_remain_proposals_pending_approval():
+    source = json.loads(PDF.with_suffix('.json').read_text(encoding='utf-8'))
+    assert 'effective_date' not in source and 'next_review_date' not in source
+    assert source['proposed_effective_date'] == '2026-10-22'
+    assert source['planned_next_review_date'] == '2027-10-22'
+    assert source['date_status'] == 'proposed_dates_approval_not_recorded'
+    assert 'approval_status: not_recorded' in PdfReader(PDF).metadata.subject
+
+
+def test_final_wording_preserves_document_control_vendor_and_record_scope():
+    source = json.loads(PDF.with_suffix('.json').read_text(encoding='utf-8'))
+    assert len(source['pages']) == 5
+    assert sum(len(p['sections']) for p in source['pages']) == 20
+    control = source['pages'][0]['sections'][0]['text']
+    assert control.count('approval not recorded') == 1
+    assert 'Proposed effective date: 2026-10-22' in control
+    assert 'Planned next review: 2027-10-22' in control
+    vendor = source['pages'][2]['sections'][3]['text']
+    for phrase in ('business owner must assess each vendor before it handles',
+                   'data access, service criticality, security requirements',
+                   'available assurance evidence and identified risks',
+                   'Engineering Lead must review the assessment',
+                   'CTO must accept material residual risk before use',
+                   'Agreements must set appropriate confidentiality',
+                   'incident communication, access termination and data return or deletion',
+                   'Reassess critical vendors annually and after material changes or incidents',
+                   'Track findings and exit dependencies',
+                   'Do not presume vendor certifications or assurances'):
+        assert phrase in vendor
+    records = source['pages'][4]['sections'][2]['text']
+    for phrase in ('risk register', 'asset inventory', 'assessments and approvals',
+                   'training records', 'vendor reviews', 'access reviews',
+                   'incidents', 'recovery exercises', 'findings', 'exception tickets',
+                   'access-restricted repository', 'ownership, version history',
+                   'approved retention schedules',
+                   'minimum 12-month retention for KMS audit logs',
+                   'that period does not apply to all records',
+                   'no completed evidence or approval signatures'):
+        assert phrase in records

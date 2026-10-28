@@ -39,7 +39,7 @@ def test_source_typography_provenance_and_searchable_pages():
             assert section['text'].isascii()
             assert section['text'] == section['text'].strip()
             assert '  ' not in section['text']
-            assert section['text'] in actual['text']
+            assert ' '.join(section['text'].split()) in actual['text']
     metadata = PdfReader(PDF).metadata
     assert 'SYNTHETIC DEMO' in metadata.title
     assert 'fictional' in metadata.author
@@ -127,3 +127,64 @@ def test_bm25_across_four_policies(query, source, page, answer):
                         and d['page'] == chunk['metadata']['page'])
         assert chunk['text'] in original['text']
         assert isinstance(chunk['metadata']['chunk_index'], int)
+
+
+
+def test_wording_revision_dates_roles_and_safety_boundaries():
+    source = json.loads(PDF.with_suffix('.json').read_text(encoding='utf-8'))
+    assert source['date_status'] == 'proposed_dates_approval_not_recorded'
+    assert source['proposed_effective_date'] == '2026-10-22'
+    assert source['planned_next_review_date'] == '2027-10-22'
+    assert 'effective_date' not in source and 'next_review_date' not in source
+    assert [len(p['sections']) for p in source['pages']] == [4] * 6
+    # Check safety limits in their own sections, not only somewhere in the PDF.
+    boundaries = {
+        (0, 3): ['CTO is accountable', 'Engineering Lead coordinates',
+                 'No dedicated or 24/7 SOC', 'on-call rota', 'Before adoption'],
+        (1, 0): ['not live services', 'separately verified alternate', 'do not wait for proof'],
+        (1, 1): ['suspected or confirmed', 'does not prove that no data was accessed'],
+        (2, 0): ['Do not delay urgent containment', 'lost evidence'],
+        (2, 1): ['UTC acquisition time', 'SHA-256 hash at acquisition',
+                 'verify copies', 'time in UTC', 'working copies', 'legal admissibility'],
+        (2, 2): ['minimum 12-month retention for KMS audit logs',
+                 'do not apply it automatically to all evidence'],
+        (3, 0): ['urgent reversible action', 'without waiting for normal approvals',
+                 'CTO authorizes material service shutdowns', 'verified alternate approval'],
+        (3, 1): ['cross-tenant paths', 'persistence beyond password resets',
+                 'within 24 hours', 'do not delay urgent compromise containment'],
+        (3, 2): ['where safe', 'does not re-encrypt historical data',
+                 'next-business-day review', 'Engineering Lead and CTO approval',
+                 'Never blindly delete keys'],
+        (3, 3): ['backup-specific key grants', 'scan in isolation', 'tenant separation',
+                 'CTO approves material residual risk', 'guarantees no numerical targets'],
+        (4, 0): ['must not negotiate, pay, promise secrecy or contact attackers',
+                 'sanctions', 'pre-authorizes no payment', 'validate any proposed recovery tool in isolation'],
+        (4, 1): ['CTO authorizes external/customer communications', 'delivery evidence'],
+        (4, 2): ['case by case', 'deadline and calculation basis',
+                 'no universal notification deadline', 'requires earlier notice', 'non-notification'],
+        (5, 0): ['blameless lessons-learned', 'owners, due dates, verification criteria',
+                 'does not remove unresolved obligations or evidence holds'],
+        (5, 1): ['at least annually', 'at least quarterly', 'at onboarding and annually',
+                 'claims none of these exercises or training activities has been completed'],
+        (5, 2): ['CTO review by the next business day', 'expiry within 90 days and monthly review'],
+    }
+    for (page, section), phrases in boundaries.items():
+        text = source['pages'][page]['sections'][section]['text']
+        for phrase in phrases:
+            assert phrase in text, (page + 1, section, phrase)
+
+
+def test_editorial_revision_preserves_severity_entries_and_adoption_scope():
+    source = json.loads(PDF.with_suffix('.json').read_text(encoding='utf-8'))
+    assert 'This JSON is the source' not in source['pages'][0]['sections'][0]['text']
+    severity = source['pages'][1]['sections'][2]['text'].split('\n\n')
+    assert [s.split(':')[0] for s in severity] == [
+        'SEV1 Critical', 'SEV2 High', 'SEV3 Moderate', 'SEV4 Low']
+    adoption = source['pages'][5]['sections'][3]['text']
+    for requirement in ('human reviewer', 'staffing', 'alternate contacts',
+                        'response roles and authority', 'cloud and SaaS inventories',
+                        'logging', 'evidence access', 'backup/key dependencies',
+                        'customer contracts', 'jurisdiction-specific advice',
+                        'consistency with the three related policies',
+                        'reviewer feedback and CTO approval'):
+        assert requirement in adoption

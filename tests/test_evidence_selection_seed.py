@@ -92,7 +92,14 @@ def test_local_snapshots_and_origins(seed):
     pages = load_pdf(str(ROOT / 'data/sample/access_control_policy.pdf'))
     q002 = json.loads((ROOT / 'tests/q002_nli_fixture.json').read_text(encoding='utf-8-sig'))
     golden = {q['id']: q for q in json.loads((ROOT / 'data/eval/golden_dataset.json').read_text())}
-    assert [p['text'] for p in pages] == [p['text'] for p in q002['pages']]
+    # Seed and approved review pin historical v1 snapshots; do not relabel v2.
+    historical_pages = q002['pages']
+    for phrase, page_index in [('All employees must use unique user accounts.', 0),
+                               ('Multi-factor authentication is required for administrative access.', 0),
+                               ('CloudDesk reviews user access permissions every quarter.', 1),
+                               ('Terminated employee access is revoked within 24 hours.', 1)]:
+        assert phrase in pages[page_index]['text']
+        assert phrase in historical_pages[page_index]['text']
     # The text document duplicates the quarterly assertion; do not inflate counts.
     assert load_text_file(str(ROOT / 'data/sample/access_control.txt'))['text'] in pages[1]['text']
     for c in seed['cases']:
@@ -102,8 +109,8 @@ def test_local_snapshots_and_origins(seed):
             assert c['claim'] == q002['claim']
         for e in c['evidence']:
             if not e['provenance']['synthetic']:
-                page = pages[e['page'] - 1]
-                assert (e['text'], e['source']) == (page['text'], page['source'])
+                page = historical_pages[e['page'] - 1]
+                assert (e['text'], e['source']) == (page['text'], page['metadata']['source'])
 
 
 @pytest.mark.parametrize('defect', [

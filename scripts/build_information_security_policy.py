@@ -39,14 +39,14 @@ def build(source_path=SOURCE, output_path=OUTPUT):
         canvas.setFillColor(colors.HexColor("#425463"))
         canvas.drawString(48, 30,
                           "SYNTHETIC / DEMO | CD-ISP-001 v1.0 | Requires user review")
-        canvas.drawRightString(A4[0] - 48, 30, f"Page {doc.page}")
+        canvas.drawRightString(A4[0] - 48, 30, f"Page {doc.page} of {len(source['pages'])}")
 
     doc = SimpleDocTemplate(
         str(output_path), pagesize=A4, rightMargin=48, leftMargin=48,
         topMargin=40, bottomMargin=50, invariant=1,
         title=source["title"] + " - SYNTHETIC DEMO",
         author="CloudDesk Technologies (fictional)",
-        subject="Assumed demo governance; review_status: requires_user_review",
+        subject="Model-authored proposed governance policy; review_status: requires_user_review; approval_status: not_recorded",
     )
     doc.build(story, onFirstPage=footer, onLaterPages=footer)
     return Path(output_path)

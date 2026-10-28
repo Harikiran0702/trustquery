@@ -32,7 +32,8 @@ def build(source_path=SOURCE, output_path=OUTPUT):
         story.append(Spacer(1, 8))
         for section in page["sections"]:
             story.append(Paragraph(escape(section["heading"]), styles["PolicySection"]))
-            story.append(Paragraph(escape(section["text"]), styles["PolicyBody"]))
+            for paragraph in section["text"].split("\n\n"):
+                story.append(Paragraph(escape(paragraph), styles["PolicyBody"]))
 
     def footer(canvas, doc):
         canvas.setFont("Helvetica", 8)

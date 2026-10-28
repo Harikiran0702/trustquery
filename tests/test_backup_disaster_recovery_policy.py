@@ -39,7 +39,7 @@ def test_source_typography_provenance_and_searchable_pages():
             assert section['text'].isascii()
             assert section['text'] == section['text'].strip()
             assert '  ' not in section['text']
-            assert section['text'] in actual['text']
+            assert ' '.join(section['text'].split()) in actual['text']
     metadata = PdfReader(PDF).metadata
     assert 'SYNTHETIC DEMO' in metadata.title
     assert 'fictional' in metadata.author
@@ -94,7 +94,7 @@ def test_related_policy_alignment_and_operational_limits():
             'where safe', 'next-business-day review', 'Engineering Lead and CTO approval',
             'at least every 12 months', 'no default decrypt permission'],
         'information_security_policy.pdf': ['at least annually and after material changes',
-            'CTO approves', 'review open risks quarterly'],
+            'CTO must approve', 'Review open risks quarterly'],
         'incident_response_plan.pdf': ['tenant separation', 'Engineering Lead verifies containment',
             'CTO approves material residual risk', 'no universal notification deadline'],
     }
@@ -115,7 +115,7 @@ def test_related_policy_alignment_and_operational_limits():
      ['backups run daily', 'retain backups for 30 days']),
     ('Business impact analysis and objectives', ['CTO approves', 'no numerical targets'],
      ['RTO: 4 hours', 'RPO: 24 hours']),
-    ('Proposed isolation and immutability controls', ['No immutability', 'asserted as implemented'],
+    ('Proposed isolation and immutability controls', ['No immutable backup', 'asserted as implemented'],
      ['backups are immutable', 'guaranteed ransomware resistance']),
     ('Negative recovery scenarios and remediation', ['denied decrypt grants', 'stop unsafe restoration',
       'Never bypass authorization', 'cross-tenant access attempts'], ['ignore integrity failures']),
@@ -165,3 +165,70 @@ def test_bm25_across_five_policies(query, source, page, answer):
                         and d['page'] == chunk['metadata']['page'])
         assert chunk['text'] in original['text']
         assert isinstance(chunk['metadata']['chunk_index'], int)
+
+
+@pytest.mark.parametrize('page,section,requirements', [
+    (1, 1, ('business impact analysis (BIA) before recovery objectives are committed',
+            'outage harm over time', 'data-loss tolerance', 'customer and contractual obligations',
+            'dependency failures, staffing, costs and recovery order',
+            'Engineering Lead must review assumptions and feasibility', 'CTO approves',
+            'Both remain TBD', 'no numerical targets or availability guarantees')),
+    (1, 2, ('frequency and retention are TBD', 'before deployment',
+            'change rate, sensitivity, loss tolerance, recovery cost and obligations',
+            'replication can propagate corruption')),
+    (1, 3, ('customer deletion commitments', 'legal or incident holds', 'vendor deletion behavior',
+            'prevent deleted data', 'holds have been released', 'disposal evidence',
+            'not a backup retention period')),
+    (2, 0, ('AES-256', 'TLS 1.2 or TLS 1.3', 'backup-specific key grants separate',
+            'non-exportable', 'no default decrypt permission', 'every quarter', 'within 24 hours')),
+    (2, 1, ('at least every 12 months', 'does not re-encrypt historical data',
+            'restricted access for the full lifetime', 'legal or incident holds',
+            'authorized decrypt access', 'Engineering Lead and CTO approval', 'destruction record')),
+    (2, 2, ('immediately open an incident', 'where safe', 'before taking destructive action',
+            'CTO must authorize', 'next-business-day review', 'do not reconnect compromised grants',
+            'monthly and after incidents', 'at least 12 months in restricted encrypted storage')),
+    (2, 3, ('where justified by risk', 'technically verify how the provider applies these protections',
+            'retention locks, recovery access and cost',
+            'asserted as implemented', 'attacker alter backups or keys', 'compensating safeguards')),
+    (3, 0, ('CD-IRP-001 severity rules', 'CTO must authorize disaster declaration',
+            'delegated authority', 'urgent reversible containment', 'separately verified alternate contacts')),
+    (3, 2, ('backup provenance', 'outside known corruption', 'record uncertainty',
+            'restore in isolation', 'do not overwrite originals',
+            'Engineering Lead verifies containment', 'CTO approves material residual risk')),
+    (3, 3, ('transactional consistency, tenant boundaries, permissions', 'schema compatibility',
+            'deletion/hold reconciliation', 'without exposing one tenant to another',
+            'actual elapsed time', 'unapproved RTO/RPO', 'rollback', 'stop release', 'CTO authorization')),
+    (4, 0, ('representative encrypted restore at least quarterly', 'data integrity, authorized key access',
+            'successive tests', 'isolated environments', 'operator authorization',
+            'elapsed time, failures and limitations', 'not an SLA')),
+    (4, 2, ('at least annually and after material changes', 'does not replace',
+            'restore test alone does not satisfy', 'No exercise or restoration is claimed completed')),
+    (4, 3, ('SaaS exports', 'regional dependencies', 'recovery/deletion limitations',
+            'Assess vendors before use', 'Reassess critical vendors annually', 'export portability',
+            'exit dependencies', 'do not establish CloudDesk recoverability', 'risk register')),
+    (5, 0, ('coverage and recoverability', 'validation and rollback', 'before adoption',
+            'before onboarding scoped vendors', 'Review open risks quarterly', 'overdue high-impact actions')),
+    (5, 1, ('compensating safeguards', 'within 90 days', 'reviewed monthly',
+            'fresh assessment and approval', 'CTO review by the next business day', 'no active exception')),
+    (5, 2, ('backup job outcomes and failure escalations', 'integrity results',
+            'corrective-action closure evidence', 'ownership, version history, approved retention and holds',
+            'No completed evidence artifacts', 'without applying that minimum to all records')),
+    (5, 3, ('human reviewers', 'staffing, substitutes, declaration authority',
+            'vendor limitations, BIA, customer contracts, notification obligations and resource feasibility',
+            'reviewer feedback and CTO approval before operational adoption', 'not_recorded')),
+])
+def test_rewrite_preserves_recovery_safety_and_approval_boundaries(page, section, requirements):
+    source, _ = source_text()
+    text = source['pages'][page]['sections'][section]['text']
+    for requirement in requirements:
+        assert requirement in text, (page + 1, section, requirement)
+
+
+def test_wording_revision_preserves_mapping_and_proposed_dates():
+    source, _ = source_text()
+    assert [len(page['sections']) for page in source['pages']] == [4] * 6
+    assert 'effective_date' not in source and 'next_review_date' not in source
+    assert source['proposed_effective_date'] == '2026-10-22'
+    assert source['planned_next_review_date'] == '2027-10-22'
+    assert source['date_status'] == 'proposed_dates_approval_not_recorded'
+    assert 'not an approved schedule' in source['pages'][0]['sections'][0]['text']

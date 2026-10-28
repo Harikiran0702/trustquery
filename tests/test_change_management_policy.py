@@ -39,7 +39,7 @@ def test_source_typography_provenance_and_searchable_pages():
             assert section['text'].isascii()
             assert section['text'] == section['text'].strip()
             assert '  ' not in section['text']
-            assert section['text'] in actual['text']
+            assert ' '.join(section['text'].split()) in actual['text']
     metadata = PdfReader(PDF).metadata
     assert 'SYNTHETIC DEMO' in metadata.title
     assert 'fictional' in metadata.author
@@ -96,8 +96,8 @@ def test_authority_alignment_and_limits():
         'access_control_policy.pdf': ['unique user accounts', 'every quarter', 'within 24 hours'],
         'encryption_key_management_policy.pdf': ['AES-256', 'at least every 12 months',
             'Engineering Lead and CTO approval', 'no default decrypt permission'],
-        'information_security_policy.pdf': ['at least annually and before material service changes',
-            'review open risks quarterly'],
+        'information_security_policy.pdf': ['at least annually, before material service changes',
+            'Review open risks quarterly'],
         'incident_response_plan.pdf': ['urgent reversible action', 'Engineering Lead verifies containment'],
         'backup_disaster_recovery_policy.pdf': ['at least quarterly', 'TBD pending BIA/business and contractual review',
             'does not replace', 'minimum 12-month retention for KMS audit logs'],
@@ -186,3 +186,94 @@ def test_retrieved_limitations_do_not_support_operational_claims(corpus, query, 
     results = search_bm25(query, corpus, top_k=3)
     assert any(r['metadata']['source'] == PDF.name and r['metadata']['page'] == page
                and limitation in r['text'] for r in results)
+
+
+@pytest.mark.parametrize('page,section,requirements', [
+    (0, 2, ('database schemas and data migrations', 'infrastructure as code (IaC)',
+            'manual console changes, feature flags, scripts and vendor-driven changes',
+            'development work with a production impact', 'remain authoritative')),
+    (0, 3, ('competent independent reviewer', 'Separate requester, reviewer and deployment approval duties',
+            'CTO approval of compensating review before a planned deployment', 'do not silently self-approve')),
+    (1, 0, ('documented, tested procedure preauthorized', 'CTO must accept any material residual risk',
+            'eligibility, exact scope, version, validation, rollback, authorized operators',
+            'Each execution still needs a ticket', 'requires normal or emergency handling')),
+    (1, 1, ('peer review, system-owner acceptance', 'Engineering Lead process approval',
+            'CTO approves material residual risk, major service impact and exceptions',
+            'Reassess and reapprove', 'not by itself proof')),
+    (1, 2, ('unique ID', 'requester, owner, classification rationale', 'tenant scope and dependency map',
+            'exact artifact/configuration versions', 'data migration reversibility',
+            'proposed timing and time zone', 'verification/stop criteria', 'decision authority')),
+    (2, 0, ('exact reviewed commit and immutable release artifact identifier or digest',
+            'unit, integration and migration checks', 'Block planned release', 'approved, bounded exception')),
+    (2, 2, ('negative cross-tenant access attempts', 'object identifiers, API authorization, exports',
+            'background jobs, caches and privilege changes', 'old/new application coexistence',
+            'duplicate event handling', 'partially applied migrations', 'block planned release')),
+    (2, 3, ('representative encrypted restore', 'authorized key access', 'before planned rollout',
+            'backup-specific key grants', 'required older key versions', 'holds',
+            'at least every 12 months', 'does not re-encrypt historical data',
+            'Engineering Lead and CTO approval', 'at least quarterly', 'at least annually',
+            'neither substitutes for the other')),
+    (3, 1, ('approvals or valid standard preauthorization', 'reviewed artifact identity',
+            'recovery readiness', 'canary cohorts or feature flags', 'reconcile them into reviewed configuration/IaC',
+            'Pause when monitoring or responsible authorized coverage is unavailable')),
+    (3, 2, ('error rates, latency, security signals, tenant boundaries, data integrity',
+            'acceptance criteria', 'observation period', 'expand, hold or stop',
+            'system owner records acceptance', 'CTO approves material residual risk')),
+    (3, 3, ('Stop rollout', 'only if safe', 'irreversible migrations', 'decision authority before planned deployment',
+            'Preserve evidence', 'Link or open an incident', 'Retest before redeployment')),
+    (4, 0, ('urgent reversible action', 'Do not delay immediate containment',
+            'as soon as safe', 'CTO authorizes material service shutdowns', 'verified alternate approval',
+            'does not expand authority for destructive actions, emergency decrypt access or external communications')),
+    (4, 1, ('omitted checks', 'known uncertainty', 'CTO reviews emergency changes by the next business day',
+            'remaining risk', 'reconcile hotfixes into version control', 'prior approval')),
+    (4, 2, ('revoke affected grants', 'disable compromised versions where safe',
+            'Never blindly destroy keys', 'temporary emergency decrypt access', 'next-business-day review',
+            'destruction approvals', 'clean recovery, tenant integrity and dependency gates',
+            'TBD pending BIA/business and contractual review')),
+    (4, 3, ('OAuth scopes, data flows, subprocessors, regions, exports and deletion behavior',
+            'before enabling access', 'Engineering Lead reviews', 'CTO accepts material residual risk',
+            'critical vendors annually and after material changes or incidents', 'exit/recovery limitations')),
+    (5, 0, ('CI/test outputs', 'approval decisions and timestamps', 'deployment actor/actions',
+            'production verification, rollback, incident linkage and closure', 'version history',
+            'approved retention and holds', 'minimum 12-month retention for KMS audit logs only',
+            'not a universal change-ticket, incident-evidence or backup retention rule')),
+    (5, 1, ('compensating safeguards, remediation owner and expiry', 'CTO approves or rejects',
+            'within 90 days', 'reviewed monthly', 'fresh assessment and approval',
+            'Expired approval cannot authorize', 'CTO review by the next business day')),
+    (5, 2, ('at least quarterly', 'significant failed changes or incidents',
+            'Suspend unsafe standard procedures', 'retest before reuse', 'CTO risk acceptance', 'at least annually')),
+])
+def test_wording_preserves_change_safety_and_authority(page, section, requirements):
+    source, _ = source_text()
+    text = source['pages'][page]['sections'][section]['text']
+    for phrase in requirements:
+        assert phrase in text, (page + 1, section, phrase)
+
+
+def test_wording_mapping_and_unapproved_dates():
+    source, _ = source_text()
+    assert [len(p['sections']) for p in source['pages']] == [4] * 6
+    assert 'effective_date' not in source and 'next_review_date' not in source
+    assert source['proposed_effective_date'] == '2026-10-22'
+    assert source['planned_next_review_date'] == '2027-10-22'
+    assert source['date_status'] == 'proposed_dates_approval_not_recorded'
+    assert 'not an approved schedule' in source['pages'][0]['sections'][0]['text']
+
+
+def test_final_semantic_review_refinements():
+    source, _ = source_text()
+    scope = source['pages'][0]['sections'][2]['text']
+    for requirement in ('application code', 'database schemas', 'data migrations',
+                        'infrastructure as code (IaC)', 'cloud configuration',
+                        'security controls', 'identity permissions', 'encryption keys',
+                        'backup methods', 'recovery runbooks', 'vendor integrations',
+                        'manual console changes', 'feature flags', 'scripts',
+                        'vendor-driven changes', 'development work with a production impact'):
+        assert requirement.lower() in scope.lower()
+    safeguards = source['pages'][2]['sections'][0]['text']
+    for requirement in ('pull request', 'exact reviewed commit', 'immutable release artifact',
+                        'peer review', 'CI/tests', 'Keep test evidence', 'Block planned release',
+                        'approved, bounded exception'):
+        assert requirement in safeguards
+    assert source['pages'][5]['sections'][3]['text'].endswith(
+        'This proposed policy does not provide evidence that CloudDesk has implemented or tested these controls.')

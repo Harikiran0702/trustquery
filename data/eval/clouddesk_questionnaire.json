@@ -1,0 +1,602 @@
+[
+  {
+    "id": "cdq001",
+    "domain": "access_control",
+    "response_type": "short_answer",
+    "question": "How often does your written policy call for staff access reviews, and who is meant to follow up on unnecessary access?"
+  },
+  {
+    "id": "cdq002",
+    "domain": "access_control",
+    "response_type": "yes_no",
+    "question": "Does every employee accessing our information have an individual account?"
+  },
+  {
+    "id": "cdq003",
+    "domain": "access_control",
+    "response_type": "short_answer",
+    "question": "What approvals does your onboarding policy require before someone is given access to customer systems?"
+  },
+  {
+    "id": "cdq004",
+    "domain": "access_control",
+    "response_type": "yes_no",
+    "question": "When someone moves out of a support role, do you remove their old permissions as well as granting new ones?"
+  },
+  {
+    "id": "cdq005",
+    "domain": "access_control",
+    "response_type": "short_answer",
+    "question": "How quickly would you remove a departing employee's access, and can you share a recent redacted example?"
+  },
+  {
+    "id": "cdq006",
+    "domain": "access_control",
+    "response_type": "short_answer",
+    "question": "For a contractor helping with our rollout, what access limits does your policy require?"
+  },
+  {
+    "id": "cdq007",
+    "domain": "access_control",
+    "response_type": "yes_no",
+    "question": "Can someone who administers your encryption keys also read customer data by default?"
+  },
+  {
+    "id": "cdq008",
+    "domain": "access_control",
+    "response_type": "yes_no",
+    "question": "If a departing employee's account appears compromised, does your process allow containment before the normal offboarding steps finish?"
+  },
+  {
+    "id": "cdq009",
+    "domain": "authentication",
+    "response_type": "yes_no",
+    "question": "Is MFA enforced for everyone with administrative access to the service and its keys?"
+  },
+  {
+    "id": "cdq010",
+    "domain": "authentication",
+    "response_type": "yes_no",
+    "question": "Can our users sign in through our SAML identity provider?"
+  },
+  {
+    "id": "cdq011",
+    "domain": "authentication",
+    "response_type": "yes_no",
+    "question": "Can we use SCIM to provision and deactivate our users automatically?"
+  },
+  {
+    "id": "cdq012",
+    "domain": "authentication",
+    "response_type": "short_answer",
+    "question": "How does your security policy say application passwords should be stored?"
+  },
+  {
+    "id": "cdq013",
+    "domain": "authentication",
+    "response_type": "yes_no",
+    "question": "Do you force every user to change their password every 90 days?"
+  },
+  {
+    "id": "cdq014",
+    "domain": "authentication",
+    "response_type": "short_answer",
+    "question": "If an API token is exposed, what does your incident plan call for beyond resetting a password?"
+  },
+  {
+    "id": "cdq015",
+    "domain": "authentication",
+    "response_type": "short_answer",
+    "question": "Who could we reach if your normal company accounts were compromised, and is that route already staffed?"
+  },
+  {
+    "id": "cdq016",
+    "domain": "authentication",
+    "response_type": "short_answer",
+    "question": "What idle-session timeout applies to our customer users, and can we configure it?"
+  },
+  {
+    "id": "cdq017",
+    "domain": "encryption_key_management",
+    "response_type": "short_answer",
+    "question": "Which TLS versions does your policy allow for our API traffic and internal connections carrying customer information?"
+  },
+  {
+    "id": "cdq018",
+    "domain": "encryption_key_management",
+    "response_type": "yes_no",
+    "question": "Are our database records, uploaded files and production snapshots encrypted at rest?"
+  },
+  {
+    "id": "cdq019",
+    "domain": "encryption_key_management",
+    "response_type": "yes_no",
+    "question": "Are company laptops that may hold customer information protected with full-disk encryption?"
+  },
+  {
+    "id": "cdq020",
+    "domain": "encryption_key_management",
+    "response_type": "short_answer",
+    "question": "What is your policy for checking certificates and catching upcoming expiry?"
+  },
+  {
+    "id": "cdq021",
+    "domain": "encryption_key_management",
+    "response_type": "short_answer",
+    "question": "Where does your policy require production keys and application secrets to be kept?"
+  },
+  {
+    "id": "cdq022",
+    "domain": "encryption_key_management",
+    "response_type": "short_answer",
+    "question": "When keys rotate, what does your policy require for older backups that still need the previous version?"
+  },
+  {
+    "id": "cdq023",
+    "domain": "encryption_key_management",
+    "response_type": "yes_no",
+    "question": "Can we bring our own encryption key and revoke it ourselves when our contract ends?"
+  },
+  {
+    "id": "cdq024",
+    "domain": "encryption_key_management",
+    "response_type": "yes_no",
+    "question": "Is our content end-to-end encrypted so that CloudDesk cannot read it?"
+  },
+  {
+    "id": "cdq025",
+    "domain": "encryption_key_management",
+    "response_type": "short_answer",
+    "question": "If you suspect a production key has leaked, what does the plan say to do without losing access to recoverable backups?"
+  },
+  {
+    "id": "cdq026",
+    "domain": "encryption_key_management",
+    "response_type": "short_answer",
+    "question": "How often are KMS audit events reviewed, and can you provide evidence of the latest review?"
+  },
+  {
+    "id": "cdq027",
+    "domain": "encryption_key_management",
+    "response_type": "short_answer",
+    "question": "If one integration cannot meet your encryption standard, how must an exception be handled?"
+  },
+  {
+    "id": "cdq028",
+    "domain": "encryption_key_management",
+    "response_type": "yes_no",
+    "question": "Does your encryption policy distinguish public website content from customer information?"
+  },
+  {
+    "id": "cdq029",
+    "domain": "encryption_key_management",
+    "response_type": "yes_no",
+    "question": "Do you keep credentials and private keys out of support exports and application logs?"
+  },
+  {
+    "id": "cdq030",
+    "domain": "information_security_governance",
+    "response_type": "short_answer",
+    "question": "Who owns security decisions in your proposed governance model?"
+  },
+  {
+    "id": "cdq031",
+    "domain": "information_security_governance",
+    "response_type": "yes_no",
+    "question": "Has your information security policy been approved by management?"
+  },
+  {
+    "id": "cdq032",
+    "domain": "information_security_governance",
+    "response_type": "short_answer",
+    "question": "When does your policy require a risk assessment, and how are unresolved risks followed up?"
+  },
+  {
+    "id": "cdq033",
+    "domain": "information_security_governance",
+    "response_type": "short_answer",
+    "question": "How should staff classify and share information we send during support?"
+  },
+  {
+    "id": "cdq034",
+    "domain": "information_security_governance",
+    "response_type": "short_answer",
+    "question": "Can you describe how you track systems holding our information and provide the current inventory?"
+  },
+  {
+    "id": "cdq035",
+    "domain": "information_security_governance",
+    "response_type": "yes_no",
+    "question": "Do you have a current SOC 2 Type II report we can review?"
+  },
+  {
+    "id": "cdq036",
+    "domain": "information_security_governance",
+    "response_type": "short_answer",
+    "question": "What internal policy review and follow-up does your governance document require?"
+  },
+  {
+    "id": "cdq037",
+    "domain": "information_security_governance",
+    "response_type": "short_answer",
+    "question": "How long would you retain our information after termination, including any copies held by suppliers?"
+  },
+  {
+    "id": "cdq038",
+    "domain": "information_security_governance",
+    "response_type": "short_answer",
+    "question": "What happens if a temporary security exception expires before the issue is fixed?"
+  },
+  {
+    "id": "cdq039",
+    "domain": "information_security_governance",
+    "response_type": "short_answer",
+    "question": "Can you provide evidence showing which of these security controls are currently in place and operating?"
+  },
+  {
+    "id": "cdq040",
+    "domain": "information_security_governance",
+    "response_type": "yes_no",
+    "question": "Does the scope of your proposed security policies include contractors and service identities as well as employees?"
+  },
+  {
+    "id": "cdq041",
+    "domain": "information_security_governance",
+    "response_type": "yes_no",
+    "question": "Are overdue high-impact security findings escalated to someone who can accept the remaining risk?"
+  },
+  {
+    "id": "cdq042",
+    "domain": "incident_response",
+    "response_type": "short_answer",
+    "question": "How does your plan distinguish a suspicious event from an incident that needs coordinated response?"
+  },
+  {
+    "id": "cdq043",
+    "domain": "incident_response",
+    "response_type": "yes_no",
+    "question": "Is there a documented incident response plan with validated contacts and deputies ready for use?"
+  },
+  {
+    "id": "cdq044",
+    "domain": "incident_response",
+    "response_type": "short_answer",
+    "question": "What does your plan require responders to record when collecting evidence from a suspected customer-data incident?"
+  },
+  {
+    "id": "cdq045",
+    "domain": "incident_response",
+    "response_type": "yes_no",
+    "question": "If you detect active misuse of our tenant, can responders block the affected access before routine change approval?"
+  },
+  {
+    "id": "cdq046",
+    "domain": "incident_response",
+    "response_type": "short_answer",
+    "question": "How soon would you notify us if one of your suppliers exposed our information?"
+  },
+  {
+    "id": "cdq047",
+    "domain": "incident_response",
+    "response_type": "yes_no",
+    "question": "Do you provide around-the-clock security monitoring and a guaranteed incident response time?"
+  },
+  {
+    "id": "cdq048",
+    "domain": "incident_response",
+    "response_type": "short_answer",
+    "question": "Who can send us an incident update, and how should uncertain facts be presented?"
+  },
+  {
+    "id": "cdq049",
+    "domain": "incident_response",
+    "response_type": "short_answer",
+    "question": "What is your plan for a ransomware demand when backups may also be affected?"
+  },
+  {
+    "id": "cdq050",
+    "domain": "incident_response",
+    "response_type": "short_answer",
+    "question": "When was your last incident exercise, and what did you change afterwards?"
+  },
+  {
+    "id": "cdq051",
+    "domain": "incident_response",
+    "response_type": "short_answer",
+    "question": "Under your incident plan, how should evidence containing our information be protected and disposed of?"
+  },
+  {
+    "id": "cdq052",
+    "domain": "incident_response",
+    "response_type": "short_answer",
+    "question": "According to your plan, what needs to be recorded before a significant incident can be closed?"
+  },
+  {
+    "id": "cdq053",
+    "domain": "incident_response",
+    "response_type": "yes_no",
+    "question": "Have you exercised what happens if the main incident coordinator is unavailable during a recovery?"
+  },
+  {
+    "id": "cdq054",
+    "domain": "backup_disaster_recovery",
+    "response_type": "short_answer",
+    "question": "What RTO and RPO can you commit to for our production tenant?"
+  },
+  {
+    "id": "cdq055",
+    "domain": "backup_disaster_recovery",
+    "response_type": "short_answer",
+    "question": "How often is our data backed up, and how long do you keep each copy?"
+  },
+  {
+    "id": "cdq056",
+    "domain": "backup_disaster_recovery",
+    "response_type": "yes_no",
+    "question": "Are production backups encrypted and limited to authorized recovery roles?"
+  },
+  {
+    "id": "cdq057",
+    "domain": "backup_disaster_recovery",
+    "response_type": "short_answer",
+    "question": "How much restore testing does your policy require, and what should the test record contain?"
+  },
+  {
+    "id": "cdq058",
+    "domain": "backup_disaster_recovery",
+    "response_type": "short_answer",
+    "question": "Can you provide the most recent restore-test result and explain what it covered?"
+  },
+  {
+    "id": "cdq059",
+    "domain": "backup_disaster_recovery",
+    "response_type": "yes_no",
+    "question": "Are your backups immutable or isolated from a compromised production administrator?"
+  },
+  {
+    "id": "cdq060",
+    "domain": "backup_disaster_recovery",
+    "response_type": "short_answer",
+    "question": "What recovery dependencies does your plan say to check before restoring customer data?"
+  },
+  {
+    "id": "cdq061",
+    "domain": "backup_disaster_recovery",
+    "response_type": "short_answer",
+    "question": "What safeguards does your recovery policy require to reduce the risk of restoring compromised data or exposing another customer’s information?"
+  },
+  {
+    "id": "cdq062",
+    "domain": "backup_disaster_recovery",
+    "response_type": "short_answer",
+    "question": "How should a restore handle customer records that were already deleted or placed on hold?"
+  },
+  {
+    "id": "cdq063",
+    "domain": "backup_disaster_recovery",
+    "response_type": "yes_no",
+    "question": "Does an annual continuity tabletop satisfy your policy's encrypted restore requirement?"
+  },
+  {
+    "id": "cdq064",
+    "domain": "backup_disaster_recovery",
+    "response_type": "short_answer",
+    "question": "Under your recovery policy, what should happen if a backup is intact but its decrypt grant or KMS service is unavailable?"
+  },
+  {
+    "id": "cdq065",
+    "domain": "backup_disaster_recovery",
+    "response_type": "short_answer",
+    "question": "Which shared provider dependencies could stop recovery, and have alternatives been tested?"
+  },
+  {
+    "id": "cdq066",
+    "domain": "backup_disaster_recovery",
+    "response_type": "yes_no",
+    "question": "Are copies of our backups stored in a second geographic region today?"
+  },
+  {
+    "id": "cdq067",
+    "domain": "change_management",
+    "response_type": "short_answer",
+    "question": "Who must approve a normal production change, especially when the same small team builds and deploys it?"
+  },
+  {
+    "id": "cdq068",
+    "domain": "change_management",
+    "response_type": "yes_no",
+    "question": "Are production code and infrastructure changes linked to a reviewed version and release artifact?"
+  },
+  {
+    "id": "cdq069",
+    "domain": "change_management",
+    "response_type": "short_answer",
+    "question": "Under your written change policy, can a routine change skip individual approval, and what limits apply?"
+  },
+  {
+    "id": "cdq070",
+    "domain": "change_management",
+    "response_type": "short_answer",
+    "question": "If a release fails a cross-tenant authorization check, what does your process require?"
+  },
+  {
+    "id": "cdq071",
+    "domain": "change_management",
+    "response_type": "short_answer",
+    "question": "How must an irreversible database migration be prepared for failure?"
+  },
+  {
+    "id": "cdq072",
+    "domain": "change_management",
+    "response_type": "short_answer",
+    "question": "How are urgent security hotfixes handled when waiting for the normal process would increase harm?"
+  },
+  {
+    "id": "cdq073",
+    "domain": "change_management",
+    "response_type": "short_answer",
+    "question": "Can you share a recent change showing deployment approval and checks after release?"
+  },
+  {
+    "id": "cdq074",
+    "domain": "change_management",
+    "response_type": "short_answer",
+    "question": "What extra checks does your policy require before changing storage encryption or backup access?"
+  },
+  {
+    "id": "cdq075",
+    "domain": "change_management",
+    "response_type": "short_answer",
+    "question": "If a support integration asks for wider OAuth scopes or moves processing to another region, what needs review?"
+  },
+  {
+    "id": "cdq076",
+    "domain": "change_management",
+    "response_type": "yes_no",
+    "question": "Do you hold a planned deployment when no authorized person is available to monitor or recover it?"
+  },
+  {
+    "id": "cdq077",
+    "domain": "change_management",
+    "response_type": "yes_no",
+    "question": "Do your written change rules also cover manual production console edits and feature flags?"
+  },
+  {
+    "id": "cdq078",
+    "domain": "change_management",
+    "response_type": "yes_no",
+    "question": "Are exports and background jobs tested to prevent one customer from seeing another customer's data?"
+  },
+  {
+    "id": "cdq079",
+    "domain": "hr_security",
+    "response_type": "yes_no",
+    "question": "Are criminal background checks completed for every employee and contractor before access is granted?"
+  },
+  {
+    "id": "cdq080",
+    "domain": "hr_security",
+    "response_type": "short_answer",
+    "question": "What confidentiality and acceptable-use steps does your policy require before a person receives access?"
+  },
+  {
+    "id": "cdq081",
+    "domain": "hr_security",
+    "response_type": "yes_no",
+    "question": "Have people who handle our information completed onboarding and annual security awareness training?"
+  },
+  {
+    "id": "cdq082",
+    "domain": "hr_security",
+    "response_type": "short_answer",
+    "question": "What preparation does your policy require before a developer is given privileged production duties?"
+  },
+  {
+    "id": "cdq083",
+    "domain": "hr_security",
+    "response_type": "short_answer",
+    "question": "How does your policy say overdue security training should be handled?"
+  },
+  {
+    "id": "cdq084",
+    "domain": "hr_security",
+    "response_type": "short_answer",
+    "question": "Can you show how a recent leaver's accounts, sessions, devices and service ownership were handled?"
+  },
+  {
+    "id": "cdq085",
+    "domain": "hr_security",
+    "response_type": "short_answer",
+    "question": "Under your personnel policy, how should access change when someone takes extended leave and later returns?"
+  },
+  {
+    "id": "cdq086",
+    "domain": "hr_security",
+    "response_type": "short_answer",
+    "question": "What limits does your policy put on an investigation into suspected staff misuse of our information?"
+  },
+  {
+    "id": "cdq087",
+    "domain": "hr_security",
+    "response_type": "short_answer",
+    "question": "How long are screening and investigation records kept, and who can see them?"
+  },
+  {
+    "id": "cdq088",
+    "domain": "hr_security",
+    "response_type": "yes_no",
+    "question": "For a supplier's support engineer, does your policy require the same checks as for a direct employee?"
+  },
+  {
+    "id": "cdq089",
+    "domain": "hr_security",
+    "response_type": "yes_no",
+    "question": "Does your written policy support good-faith security reporting without retaliation?"
+  },
+  {
+    "id": "cdq090",
+    "domain": "vendor_risk",
+    "response_type": "yes_no",
+    "question": "Does your vendor security review process cover free trials and browser integrations before they receive customer information?"
+  },
+  {
+    "id": "cdq091",
+    "domain": "vendor_risk",
+    "response_type": "short_answer",
+    "question": "How does your policy decide whether a supplier needs a higher level of review?"
+  },
+  {
+    "id": "cdq092",
+    "domain": "vendor_risk",
+    "response_type": "short_answer",
+    "question": "Can you list the subprocessors that would handle our information, including processing and support locations?"
+  },
+  {
+    "id": "cdq093",
+    "domain": "vendor_risk",
+    "response_type": "short_answer",
+    "question": "What does your process do if a supplier cannot provide an independent assurance report?"
+  },
+  {
+    "id": "cdq094",
+    "domain": "vendor_risk",
+    "response_type": "yes_no",
+    "question": "Have your critical suppliers been reassessed in the past year?"
+  },
+  {
+    "id": "cdq095",
+    "domain": "vendor_risk",
+    "response_type": "short_answer",
+    "question": "What security and incident terms does your policy require you to agree with a data-processing supplier?"
+  },
+  {
+    "id": "cdq096",
+    "domain": "vendor_risk",
+    "response_type": "yes_no",
+    "question": "Do you require every supplier to use your own KMS architecture?"
+  },
+  {
+    "id": "cdq097",
+    "domain": "vendor_risk",
+    "response_type": "short_answer",
+    "question": "How do you keep track of supplier security changes between annual reviews, and what is operating today?"
+  },
+  {
+    "id": "cdq098",
+    "domain": "vendor_risk",
+    "response_type": "short_answer",
+    "question": "When a supplier relationship ends, how should access, exports, deletion and backup keys be handled?"
+  },
+  {
+    "id": "cdq099",
+    "domain": "vendor_risk",
+    "response_type": "short_answer",
+    "question": "If your main cloud or identity provider failed, which exit or recovery option has actually been tested?"
+  },
+  {
+    "id": "cdq100",
+    "domain": "vendor_risk",
+    "response_type": "yes_no",
+    "question": "Does your vendor policy allow a purchase order alone to count as security approval?"
+  }
+]
