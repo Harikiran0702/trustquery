@@ -154,8 +154,8 @@ def reopen_run(run_id, directory=None):
             raise ValueError('Redirected saved run paths are unsupported')
     if not batch.is_file() or not db.is_file():
         raise ValueError('Saved run requires existing results JSON and SQLite database')
-    rows, digest = load_batch(batch)
-    states = snapshot(db, digest)
+    rows, digest, legacy_hash = load_batch(batch, include_legacy_hash=True)
+    states = snapshot(db, digest, legacy_hash=legacy_hash)
     if set(states) - {row['id'] for row in rows}:
         raise ValueError('Review database contains unknown question IDs')
     return str(batch), str(db)

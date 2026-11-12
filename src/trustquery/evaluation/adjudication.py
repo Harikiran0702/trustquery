@@ -1,8 +1,9 @@
 """Compare explicit bounded human judgments to frozen offline pilot outputs."""
-import hashlib
 import json
 from collections import Counter
 from pathlib import Path
+
+from trustquery.file_hashes import legacy_crlf_sha256, text_sha256
 
 LABELS = {'text_supported', 'contradicted', 'conflicted', 'insufficient_evidence',
           'implementation_evidence_required', 'partial'}
@@ -18,7 +19,9 @@ def compare(ledger, root=ROOT):
     if set(ledger['source_sha256']) != required:
         raise ValueError('missing or unexpected source bindings')
     for path, digest in ledger['source_sha256'].items():
-        if hashlib.sha256((root/path).read_bytes()).hexdigest() != digest:
+        data = (root/path).read_bytes()
+        # Frozen ledgers recorded a mix of LF and CRLF digests.
+        if digest not in (text_sha256(data), legacy_crlf_sha256(data)):
             raise ValueError('source drift: ' + path)
     worksheet = json.loads((root/'data/eval/phase4_step3d/worksheet.json').read_text())
     pilot = json.loads((root/'data/eval/phase4_step3c/results.json').read_text())

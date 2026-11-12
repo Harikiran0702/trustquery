@@ -32,11 +32,12 @@ def export_review_json(state):
     return packed(out)
 
 
-def snapshot(path, digest):
+def snapshot(path, digest, *, legacy_hash=None):
     """Read hash binding and latest revisions within one SQLite transaction."""
     with closing(sqlite3.connect(Path(path).resolve().as_uri() + '?mode=ro', uri=True, timeout=10)) as db:
         db.execute('BEGIN')
-        if db.execute('SELECT hash FROM batch').fetchall() != [(digest,)]:
+        hashes = db.execute('SELECT hash FROM batch').fetchall()
+        if hashes != [(digest,)] and (legacy_hash is None or hashes != [(legacy_hash,)]):
             raise ValueError('Review database belongs to a different batch')
         result = {}
         for question, revision, payload, created in db.execute(
@@ -86,8 +87,8 @@ def worksheet(rows):
 
 
 def export_bytes(batch_path, state_path):
-    records, digest = load_batch(batch_path)
-    states = snapshot(state_path, digest)
+    records, digest, legacy_hash = load_batch(batch_path, include_legacy_hash=True)
+    states = snapshot(state_path, digest, legacy_hash=legacy_hash)
     if set(states) - {r['id'] for r in records}:
         raise ValueError('Review database contains unknown question IDs')
     questions = [['question_id','question_text','review_status','reviewed_answer','approved_policy_extract','approval_scope',

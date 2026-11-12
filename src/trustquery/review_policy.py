@@ -5,6 +5,8 @@ import json
 from pathlib import Path
 from pypdf import PdfReader
 
+from trustquery.file_hashes import text_sha256
+
 BUNDLE = Path(__file__).with_name('review_policy_bundle.json')
 BUNDLE_SHA256 = '8f7f6f90857217596c898c6d553a06f788935c73ad2328c924623ec107bca5fe'
 POLICY_DIRECTORY = Path(__file__).resolve().parents[2] / 'data/sample'
@@ -61,7 +63,7 @@ def proposal(record, *, enabled=False, _verify_sources=True):
     if enabled is not True or not eligible(record):
         raise ValueError('Abstained: explicit opt-in and policy-only scope required; implementation proof is unavailable')
     raw = BUNDLE.read_bytes()
-    if hashlib.sha256(raw).hexdigest() != BUNDLE_SHA256:
+    if text_sha256(raw) != BUNDLE_SHA256:
         raise ValueError('Abstained: experimental bundle version changed')
     cases = [c for c in json.loads(raw)['cases'] if matches_question(record['question'], c['question'])]
     if len(cases) != 1:

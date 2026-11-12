@@ -1,3 +1,4 @@
+import hashlib
 from io import BytesIO
 import json
 from pathlib import Path
@@ -46,6 +47,24 @@ def save(store,r,action='edited',revision=0,**extra):
     args=dict(revision=revision,action=action,answer='Incomplete draft',selected=[],reviewer='Alice',note='Need scope review',scope_checked=False)
     args.update(extra)
     return store.save(r,**args)
+
+
+def test_export_reopens_legacy_crlf_batch_pin(tmp_path):
+    rows = [record()]
+    batch = tmp_path / 'batch.json'
+    data = json.dumps(rows, indent=2).encode()
+    legacy_digest = hashlib.sha256(data.replace(b'\n', b'\r\n')).hexdigest()
+    db = tmp_path / 'review.sqlite3'
+    store = ReviewStore(db, legacy_digest)
+    save(store, rows[0])
+
+    batch.write_bytes(data)
+    questions, *_ = read(export_bytes(batch, db))
+    assert dict(zip(questions[0], questions[1]))['review_status'] == 'edited'
+
+    batch.write_bytes(data.replace(b'Batch draft', b'Changed draft'))
+    with pytest.raises(ValueError, match='different batch'):
+        export_bytes(batch, db)
 
 
 @pytest.mark.parametrize('status',['edited','rejected','needs_evidence'])

@@ -3,11 +3,12 @@
 import argparse
 import csv
 from dataclasses import asdict, dataclass
-import hashlib
 import io
 import json
 from pathlib import Path
 from typing import Literal
+
+from trustquery.file_hashes import text_sha256
 
 
 class QuestionnaireError(ValueError):
@@ -129,7 +130,7 @@ def load_questionnaire(path: str | Path) -> tuple[list[Question], dict]:
     return questions, {
         "source": path.name,
         "input_format": kind,
-        "input_sha256": hashlib.sha256(raw).hexdigest(),
+        "input_sha256": text_sha256(raw),
     }
 
 

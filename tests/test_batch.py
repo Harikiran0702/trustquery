@@ -1,7 +1,6 @@
 """Offline input contracts and draft safety; no models or API clients needed."""
 
 from dataclasses import asdict
-import hashlib
 import json
 from pathlib import Path
 import subprocess
@@ -9,6 +8,7 @@ import sys
 
 import pytest
 
+from trustquery.file_hashes import text_sha256
 from trustquery.batch import QuestionnaireError, create_drafts, load_questionnaire, main
 
 
@@ -27,7 +27,7 @@ def test_valid_order_metadata_and_determinism(tmp_path, kind):
     assert [q.id for q in questions] == ["q2", "q1"]
     assert questions[0].metadata == {"owner": "team", "domain": "access"}
     assert questions[1].metadata == {}
-    assert provenance["input_sha256"] == hashlib.sha256(path.read_bytes()).hexdigest()
+    assert provenance["input_sha256"] == text_sha256(path.read_bytes())
     drafts = create_drafts(path)
     assert drafts == create_drafts(path)
     for index, draft in enumerate(drafts, 1):

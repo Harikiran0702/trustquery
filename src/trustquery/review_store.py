@@ -1,15 +1,16 @@
 """Isolated offline review store. Candidate locators never become final citations."""
-import hashlib
 import json
 from pathlib import Path
 import sqlite3
+
+from trustquery.file_hashes import legacy_crlf_sha256, text_sha256
 
 
 class ReviewConflict(ValueError):
     """The submitted displayed revision is no longer current."""
 
 
-def load_batch(path):
+def load_batch(path, *, include_legacy_hash=False):
     raw = Path(path).read_bytes()
     rows = json.loads(raw)
     if not isinstance(rows, list) or not rows:
@@ -28,7 +29,10 @@ def load_batch(path):
                 raise ValueError('Invalid candidate reference')
             if type(e.get('page')) is not int or e['page'] < 1 or type(e.get('chunk_index')) is not int or e['chunk_index'] < 0:
                 raise ValueError('Invalid candidate locator')
-    return rows, hashlib.sha256(raw).hexdigest()
+    digest = text_sha256(raw)
+    if include_legacy_hash:
+        return rows, digest, legacy_crlf_sha256(raw)
+    return rows, digest
 
 
 def policy_extract(record, selected):
@@ -41,7 +45,7 @@ def policy_extract(record, selected):
 
 
 class ReviewStore:
-    def __init__(self, path, batch_hash):
+    def __init__(self, path, batch_hash, *, legacy_hash=None):
         self.path = Path(path)
         self.batch_hash = batch_hash
         if self.path.suffix.lower() != '.sqlite3':
@@ -51,7 +55,7 @@ class ReviewStore:
             db.execute('BEGIN IMMEDIATE')
             db.execute('CREATE TABLE IF NOT EXISTS batch (hash TEXT NOT NULL)')
             hashes = db.execute('SELECT hash FROM batch').fetchall()
-            if hashes and hashes != [(batch_hash,)]:
+            if hashes and hashes != [(batch_hash,)] and (legacy_hash is None or hashes != [(legacy_hash,)]):
                 raise ValueError('Review database belongs to a different batch; choose a new database')
             if not hashes:
                 db.execute('INSERT INTO batch VALUES (?)', (batch_hash,))

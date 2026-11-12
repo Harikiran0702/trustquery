@@ -8,11 +8,12 @@ import re
 
 from pypdf import PdfReader
 from trustquery import review_policy
+from trustquery.file_hashes import file_sha256, text_sha256
 from trustquery.retrieval.bm25_retriever import search_bm25
 
 MANIFEST = Path(__file__).with_name('candidate_sections_manifest.json')
 # Fixed at installation, never derived from current source bytes at query time.
-MANIFEST_SHA256 = 'fc7a885a6bf05fc512a3b5b37dd7e3774abd9cc00714b2ab2a0f889bce7e1e77'
+MANIFEST_SHA256 = 'a4d2f27075f8cb2623705dabc6f8d5a678ec0dc4b5167d4c9684e91ab5e2765b'
 MIN_SCORE = 2.0
 MIN_OVERLAP = 2
 UNIQUE_MARGIN = 0.25
@@ -33,7 +34,7 @@ def terms(text):
 def _verified_blobs():
     """Freshly verify pinned source bytes without parsing PDF content."""
     raw = MANIFEST.read_bytes()
-    if sha(raw) != MANIFEST_SHA256:
+    if text_sha256(raw) != MANIFEST_SHA256:
         raise ValueError('Candidate manifest changed')
     manifest = json.loads(raw)
     folder = review_policy.POLICY_DIRECTORY
@@ -47,7 +48,7 @@ def _verified_blobs():
         if path.resolve() != path.absolute() or path.stat().st_size > 20 * 1024 * 1024:
             raise ValueError('Unsafe or oversized source')
         data = path.read_bytes()
-        if sha(data) != expected:
+        if file_sha256(path, data) != expected:
             raise ValueError('Source hash mismatch: ' + name)
         blobs[name] = data
     return blobs, manifest['files']

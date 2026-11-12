@@ -65,9 +65,25 @@ def test_integrity_failure_is_atomic(tmp_path,monkeypatch):
     assert not result['candidates'] and 'hash mismatch' in result['reason']
 
 
+@pytest.mark.parametrize('newline', [b'\n', b'\r\n'])
+def test_manifest_accepts_lf_and_crlf(tmp_path, monkeypatch, newline):
+    expected = candidate.verified_source_hashes()
+    path = tmp_path / 'manifest.json'
+    raw = candidate.MANIFEST.read_bytes().replace(b'\r\n', b'\n')
+    path.write_bytes(raw.replace(b'\n', newline))
+    monkeypatch.setattr(candidate, 'MANIFEST', path)
+    assert candidate.verified_source_hashes() == expected
+
+
+def test_pdf_hash_distinguishes_line_endings():
+    from trustquery.file_hashes import file_sha256
+
+    assert file_sha256('source.pdf', b'%PDF\n') != file_sha256('source.pdf', b'%PDF\r\n')
+
+
 def test_manifest_drift_and_unknown_scope(tmp_path,monkeypatch):
     path=tmp_path/'manifest.json'
-    path.write_bytes(candidate.MANIFEST.read_bytes()+b' ')
+    path.write_bytes(candidate.MANIFEST.read_bytes().replace(b'"files"', b'"changed_files"', 1))
     monkeypatch.setattr(candidate,'MANIFEST',path)
     assert 'manifest changed' in candidate.locate(row(),enabled=True)['reason']
     assert not candidate.locate(row('Explain deletion evidence'),enabled=True)['candidates']

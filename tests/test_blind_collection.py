@@ -17,7 +17,7 @@ def setup(tmp_path,monkeypatch):
     (tmp_path/'source.pdf').write_bytes(pdf)
     manifest=tmp_path/'manifest.json'
     manifest.write_text(json.dumps(packet['corpus_sha256']))
-    monkeypatch.setattr(m,'PACKET_SHA',m.digest(path.read_bytes()))
+    monkeypatch.setattr(m,'PACKET_SHA',m.text_sha256(path.read_bytes()))
     c=m.Collection(tmp_path/'db',path,tmp_path,manifest)
     a=c.register('Real A','initial','Verified separately; no prior exposure')
     b=c.register('Real B','initial','Verified separately; no prior exposure')

@@ -8,6 +8,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from http.server import BaseHTTPRequestHandler
 
+from trustquery.file_hashes import text_sha256
+
 LABELS = {'supported', 'contradicted', 'insufficient', 'implementation-evidence-required', 'defer'}
 JUDGMENTS = ('scope', 'population', 'modality', 'polarity', 'exceptions', 'approval_status', 'conflicts', 'components', 'citation_judgment')
 PACKET_SHA = '2c26d5a6e8a746fe5c182bf34fe35b8ac1db5d9b67a82fbbeeb4bb252ec60ca7'
@@ -37,7 +39,7 @@ class Collection:
         CREATE TRIGGER IF NOT EXISTS identity_delete BEFORE DELETE ON reviewers BEGIN SELECT RAISE(ABORT,'immutable identity'); END;
         ''')
     def verify_sources(self):
-        require(digest(self.packet_path.read_bytes()) == PACKET_SHA, 'packet version mismatch')
+        require(text_sha256(self.packet_path.read_bytes()) == PACKET_SHA, 'packet version mismatch')
         manifest = json.loads(self.manifest.read_bytes())
         require(manifest == self.packet['corpus_sha256'], 'trusted manifest mismatch')
         for source, expected in manifest.items():

@@ -24,7 +24,7 @@
     },
     {
       "path": "data/sample/encryption_key_management_policy.json",
-      "sha256": "568e8380fc25f209b6afa3f3901ed77f0d0507b729d1fa5a099ff3e5ab7e0b82"
+      "sha256": "f2cd9843f08f7e05d1df4c9665b384aed4bc7dbf6d204b79dfc2f230cf0b4d26"
     },
     {
       "path": "data/sample/information_security_policy.pdf",
@@ -32,7 +32,7 @@
     },
     {
       "path": "data/sample/information_security_policy.json",
-      "sha256": "54332b4818907c32ae3f8506ea2273dc38b42c98004357441ab154ac30da68f8"
+      "sha256": "80be477ef1f9a836199ce0f040b65017f863702a91ed3a532ac9720bc521c1ac"
     },
     {
       "path": "data/sample/incident_response_plan.pdf",
@@ -40,7 +40,7 @@
     },
     {
       "path": "data/sample/incident_response_plan.json",
-      "sha256": "5962372692381284f96c175af9a11191fd10a76b688f4b2c64cde8b789c84a1d"
+      "sha256": "777881969e0a3ba30c45b8b022eca82cbf931a05a1b0939f46976c85ae4b4475"
     },
     {
       "path": "data/sample/backup_disaster_recovery_policy.pdf",
@@ -48,7 +48,7 @@
     },
     {
       "path": "data/sample/backup_disaster_recovery_policy.json",
-      "sha256": "9792b7c634ae66625db59ffc2b60f8ef456b45e5b4c6ee56bc67956c77e0d590"
+      "sha256": "2fdaddc825cb7cbd23526a4987598ad2e2f35be9c4f833ccb813b7cc70ea3eb8"
     },
     {
       "path": "data/sample/change_management_policy.pdf",
@@ -56,7 +56,7 @@
     },
     {
       "path": "data/sample/change_management_policy.json",
-      "sha256": "3c54abe0cb569b0ed2c78ccf9da6d4b463f91ea3be4abd04cc79a81825dbc03d"
+      "sha256": "b84821cd32949ce8862e4a9f37f3184fff4de7272c25307f79d92beb50aff8ca"
     },
     {
       "path": "data/sample/hr_security_policy.pdf",
@@ -64,7 +64,7 @@
     },
     {
       "path": "data/sample/hr_security_policy.json",
-      "sha256": "bede0f1ea153a11a9c7536ac588c6c74ddd4dd61e00be2b62447b68a321a5932"
+      "sha256": "30d6631e13f6ed6059dd63259646d8e3191ece18d2bdae4e54e433e48e8f3f4e"
     },
     {
       "path": "data/sample/vendor_risk_management_policy.pdf",
@@ -72,7 +72,7 @@
     },
     {
       "path": "data/sample/vendor_risk_management_policy.json",
-      "sha256": "4a475293d69c9348d73feda769f4f8a3a0225e6a0cd20dfdcc72f6633d6a9e5b"
+      "sha256": "1e62fecef2a56acce9c9d4d1adb45c156ae05c348ad2161688267d54e8677c93"
     }
   ],
   "input_file": "clouddesk_questionnaire.json",

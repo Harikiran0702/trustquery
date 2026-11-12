@@ -1,9 +1,10 @@
 """Offline dataset contract; no production retrieval or generation is invoked."""
 import copy
-import hashlib
 import json
 import re
 from pathlib import Path
+
+from trustquery.file_hashes import file_sha256
 
 import pytest
 from pypdf import PdfReader
@@ -126,7 +127,7 @@ def test_manifest_pins_exact_source_set(dataset):
     assert len(manifest) == len(expected)
     assert {e['path'] for e in manifest} == expected
     for item in manifest:
-        assert hashlib.sha256((ROOT/item['path']).read_bytes()).hexdigest() == item['sha256']
+        assert file_sha256(item['path'], (ROOT/item['path']).read_bytes()) == item['sha256']
 
 
 @pytest.mark.parametrize('stem', sorted(POLICIES))

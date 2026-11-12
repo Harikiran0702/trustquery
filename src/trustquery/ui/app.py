@@ -47,8 +47,8 @@ def main():
     try:
         if Path(batch_path).resolve() == Path(state_path).resolve():
             raise ValueError('Input and state must be separate')
-        rows, fingerprint = load_batch(batch_path)
-        store = ReviewStore(state_path, fingerprint)
+        rows, fingerprint, legacy_hash = load_batch(batch_path, include_legacy_hash=True)
+        store = ReviewStore(state_path, fingerprint, legacy_hash=legacy_hash)
     except Exception as exc:
         st.error(str(exc))
         return
