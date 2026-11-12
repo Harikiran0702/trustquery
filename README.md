@@ -5,7 +5,7 @@
 
 TrustQuery helps answer security questionnaires. You give it a list of questions, it looks through a company's security policies, and it drafts an answer for each one with the exact pages it used. If the policies don't cover a question, it says so instead of making something up. A person can review the drafts before exporting them.
 
-**Live demo:** coming soon
+**Live demo:** https://trustquery-e6arzffgweteufvxbgndnp.streamlit.app/
 
 ## Why I built this
 
