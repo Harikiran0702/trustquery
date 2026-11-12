@@ -1,0 +1,50 @@
+[
+  {
+    "id": "q001",
+    "question": "Is multi-factor authentication required for administrative access?",
+    "expected_answer": "Yes. Multi-factor authentication is required for administrative access.",
+    "expected_source": "access_control_policy.pdf",
+    "expected_page": 1,
+    "should_answer": true
+  },
+  {
+    "id": "q002",
+    "question": "Are employees required to use unique user accounts?",
+    "expected_answer": "Yes. All employees must use unique user accounts.",
+    "expected_source": "access_control_policy.pdf",
+    "expected_page": 1,
+    "should_answer": true
+  },
+  {
+    "id": "q003",
+    "question": "How often does CloudDesk review user access permissions?",
+    "expected_answer": "CloudDesk reviews user access permissions every quarter.",
+    "expected_source": "access_control_policy.pdf",
+    "expected_page": 2,
+    "should_answer": true
+  },
+  {
+    "id": "q004",
+    "question": "How quickly is access revoked for terminated employees?",
+    "expected_answer": "Terminated employee access is revoked within 24 hours.",
+    "expected_source": "access_control_policy.pdf",
+    "expected_page": 2,
+    "should_answer": true
+  },
+  {
+    "id": "q005",
+    "question": "Does CloudDesk encrypt all data at rest?",
+    "expected_answer": null,
+    "expected_source": null,
+    "expected_page": null,
+    "should_answer": false
+  },
+  {
+    "id": "q006",
+    "question": "Does CloudDesk require employees to change their passwords every 90 days?",
+    "expected_answer": null,
+    "expected_source": null,
+    "expected_page": null,
+    "should_answer": false
+  }
+]

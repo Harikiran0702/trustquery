@@ -1,0 +1,114 @@
+{
+  "corpus_sha256": {
+    "access_control_policy.pdf": "63066069188cedaa0bd4aceb3d20486917822b50d59356f0e6f50637ef5df136",
+    "backup_disaster_recovery_policy.pdf": "e03c0f23f25f9991ac7df919aa51684430b5141953256e8e8d00dc3e563c2bf8",
+    "change_management_policy.pdf": "048b678e51296d338a13af13a9c5e32ff1cb7dc6aad3f8226abc04b97f24ac2d",
+    "encryption_key_management_policy.pdf": "153134e5763b577e123ddcf9284a313ef9e691d05fddd4389a37ee3f712a8dbc",
+    "hr_security_policy.pdf": "7b9a6e5bcc24c007479b659729b9eb47c61b7483932984de66a424ed507589e3",
+    "incident_response_plan.pdf": "50f9f3ae43703211d932a24537f8b5af2fe6caa4924d9bdc955e944f88ff14d4",
+    "information_security_policy.pdf": "2d42ab474ed40eb59f72f97bf0ae09b7847107b4c1b0d5e2234199f2c4018a37",
+    "vendor_risk_management_policy.pdf": "034ab731eb64fadd7bedf4834379a904d39d8d91c800a00b15526f8256e5aea4"
+  },
+  "profiles": [
+    {
+      "question": "What approvals does your onboarding policy require before someone is given access to customer systems?",
+      "source": "hr_security_policy.pdf",
+      "anchor_page": 3,
+      "anchor_section": "The manager verifies identity and requests access with the role, start date, sponsor and required systems. System owners approve least privilege before provisioning. Authorized operators then provision the approved access. Use unique user accounts and multi-factor authentication for administrative access. Log the requester, approver, operator, permissions and completion time to document approval and provisioning. Do not copy a predecessor account or grant blanket access from a job title. Follow change management for production changes. The Engineering Lead checks missing approvals and unresolved risk before access is enabled.",
+      "typed_claims": [
+        {
+          "id": "c1",
+          "type": "policy_requirement",
+          "text": "System owners approve least privilege before provisioning."
+        }
+      ],
+      "claims": [
+        {
+          "page": 3,
+          "text": "Before provisioning, the proposed onboarding policy requires system-owner approval of least privilege. The manager verifies identity and requests access with role, start date, sponsor and required systems; authorized operators then provision approved access. Record requester, approver, operator, permissions and completion time. Use unique accounts and administrative MFA; do not copy predecessor accounts or grant blanket job-title access. Follow change management for production changes. The Engineering Lead checks missing approvals and unresolved risk before enablement. Limit access to approved duties and duration; separate privileged work where supported, provide training before privileged duties, obtain Engineering Lead key-grant approval, and give key administrators no default decrypt permission. Missing prerequisites require documented risk assessment and approved bounded safeguards, never silent self-approval."
+        },
+        {
+          "page": 2,
+          "text": "Before access, arrange appropriate confidentiality agreements or NDAs and acceptable-use acknowledgments under reviewed agreements. For contractor/vendor workers, define sponsor, scope, dates and security responsibilities; agree confidentiality, reporting, termination and return/deletion terms. Engineering Lead reviews workforce assurance and CTO accepts material residual risk; do not assume identical employee screening or vendor certification."
+        },
+        {
+          "page": 6,
+          "text": "Exception requirements in the proposed policy (preserved verbatim): Before a planned deviation, the manager or responsible owner records the requirement, scope, reason, risk, compensating safeguards, remediation owner and expiry. The Engineering Lead assesses the request. The CTO approves or rejects it. Approved exceptions expire within 90 days and are reviewed monthly. Renewal requires fresh assessment and approval. Expired approval cannot authorize access. Emergency deviations require an incident record and next-business-day CTO review. Do not delay urgent containment. An exception cannot authorize unlawful screening, erase applicable obligations or silently extend the original 24-hour termination requirement. No active exception is asserted."
+        }
+      ]
+    },
+    {
+      "question": "Which TLS versions does your policy allow for our API traffic and internal connections carrying customer information?",
+      "source": "encryption_key_management_policy.pdf",
+      "anchor_page": 2,
+      "anchor_section": "Use TLS 1.2 or TLS 1.3 for customer sessions, APIs, administrative consoles and service connections carrying scoped information, including database connections and internal service traffic. Disable SSL, TLS below 1.2 and plaintext fallbacks. Redirect public HTTP entry traffic to HTTPS; do not accept credentials or confidential request bodies over HTTP.",
+      "typed_claims": [
+        {
+          "id": "c1",
+          "type": "policy_requirement",
+          "text": "Internal service traffic carrying scoped information must use TLS 1.2 or TLS 1.3."
+        }
+      ],
+      "claims": [
+        {
+          "page": 2,
+          "text": "For customer sessions, APIs, administrative consoles and service connections carrying scoped information, including database connections and internal service traffic, the proposed policy requires TLS 1.2 or TLS 1.3. It requires disabling SSL, TLS below 1.2 and plaintext fallbacks, redirecting public HTTP entry to HTTPS, and refusing credentials or confidential request bodies over HTTP. This does not assert that every internal connection carries scoped information or that TLS 1.3 alone is required."
+        },
+        {
+          "page": 1,
+          "text": "Scoped information comprises customer data, credentials, production configuration and internal confidential information across the hosted service, supporting cloud infrastructure, corporate endpoints and backups. Employees, contractors and service identities are covered. Public marketing content may be stored unencrypted; authentication and administrative traffic still require transport protection. Vendors handling scoped information must be assessed before use."
+        },
+        {
+          "page": 4,
+          "text": "Exception requirements in the proposed policy (preserved verbatim): Before deviating, the system owner submits a ticket with the affected data, reason, risk, compensating controls, owner and expiry date. Engineering Lead assesses it; CTO approves or rejects it. Approvals expire within 90 days. Review monthly and close with remediation evidence. Renewals need a fresh assessment and approval. Emergency deviations need an incident record and CTO review by the next business day. No active exceptions are asserted."
+        }
+      ]
+    },
+    {
+      "question": "Where does your policy require production keys and application secrets to be kept?",
+      "source": "encryption_key_management_policy.pdf",
+      "anchor_page": 3,
+      "anchor_section": "Platform Engineering must use managed cloud KMS and envelope encryption for production keys. Key-encryption keys stay non-exportable in KMS. Store encrypted data keys with their encrypted objects when the service requires it. Keep application secrets and supported certificate private keys in a secrets manager. Separate production keys and grants from development and test.",
+      "typed_claims": [
+        {
+          "id": "c1",
+          "type": "policy_requirement",
+          "text": "Platform Engineering must use managed cloud KMS and envelope encryption for production keys."
+        }
+      ],
+      "claims": [
+        {
+          "page": 3,
+          "text": "For production keys, the proposed policy requires Platform Engineering to use managed cloud KMS and envelope encryption, keeping key-encryption keys non-exportable in KMS. Encrypted data keys are stored with encrypted objects when the service requires it. Application secrets and supported certificate private keys belong in a secrets manager. Separate production keys and grants from development and test. This does not require storing every data key exclusively inside KMS."
+        },
+        {
+          "page": 4,
+          "text": "Exception requirements in the proposed policy (preserved verbatim): Before deviating, the system owner submits a ticket with the affected data, reason, risk, compensating controls, owner and expiry date. Engineering Lead assesses it; CTO approves or rejects it. Approvals expire within 90 days. Review monthly and close with remediation evidence. Renewals need a fresh assessment and approval. Emergency deviations need an incident record and CTO review by the next business day. No active exceptions are asserted."
+        }
+      ]
+    },
+    {
+      "question": "How much restore testing does your policy require, and what should the test record contain?",
+      "source": "backup_disaster_recovery_policy.pdf",
+      "anchor_page": 5,
+      "anchor_section": "Test a representative encrypted restore at least quarterly. Record data integrity, authorized key access and the recovery outcome. Plan risk-based coverage across datasets, backup types and key versions over successive tests; this does not require restoring every backup each quarter. Use isolated environments and synthetic data where feasible. Restrict handling of any necessary customer data. Record the source/backup ID, recovery point, key version, operator authorization, checks, elapsed time, failures and limitations. Compare results with approved objectives. A test is not an SLA or proof that every system can be recovered.",
+      "typed_claims": [
+        {
+          "id": "c1",
+          "type": "policy_requirement",
+          "text": "Test a representative encrypted restore at least quarterly."
+        }
+      ],
+      "claims": [
+        {
+          "page": 5,
+          "text": "The proposed policy requires a representative encrypted restore at least quarterly, recording data integrity, authorized key access and recovery outcome. Plan risk-based coverage across datasets, backup types and key versions over successive tests; every backup need not be restored each quarter. Use isolated environments and synthetic data where feasible and restrict necessary customer data. Record source/backup ID, recovery point, key version, operator authorization, checks, elapsed time, failures and limitations; compare with approved objectives. A test is not an SLA or proof that every system can recover. Annual continuity exercises are separate and do not replace the quarterly restore; a restore alone does not satisfy annual continuity exercises. No exercise or restoration is claimed completed. Negative recovery scenarios must cover missing/disabled keys, denied grants, unavailable providers, corrupted/incomplete copies, inconsistent recovery points, compromised credentials and cross-tenant attempts. Responders must stop unsafe restoration, preserve evidence and escalate to the Engineering Lead and CTO; use a validated alternative or document that recovery is impossible. Never bypass authorization or suppress failed integrity checks. Assign findings an owner and due date and keep retest evidence."
+        },
+        {
+          "page": 6,
+          "text": "Exception requirements in the proposed policy (preserved verbatim): Before deviating, the owner must record affected assets/data, the requirement, rationale, risk, compensating safeguards, responsible owner and expiry. The Engineering Lead must assess the request and the CTO must approve or reject it. Exceptions expire within 90 days and must be reviewed monthly. Renewal requires a fresh assessment and approval. Emergency deviations require an incident record and CTO review by the next business day. CD-ENC-001 remains authoritative for encryption exceptions and destructive key approvals. This policy supplies no active exception or approval."
+        }
+      ]
+    }
+  ]
+}

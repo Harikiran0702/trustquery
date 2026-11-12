@@ -1,0 +1,5 @@
+*.pdf binary
+# Preserve exact reviewed corpus/questionnaire bytes on Windows and Linux.
+data/sample/*.json -text
+data/eval/clouddesk_questionnaire.json -text
+*.py text eol=lf

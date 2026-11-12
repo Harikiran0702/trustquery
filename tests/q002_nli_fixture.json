@@ -1,0 +1,23 @@
+{
+  "id": "q002",
+  "question": "Are employees required to use unique user accounts?",
+  "cached_answer": "Yes, all employees are required to use unique user accounts.\n\n**Source:** access_control_policy.pdf, Page: 1",
+  "claim": "Yes, all employees are required to use unique user accounts.",
+  "provenance": "Snapshot from evaluation at 4e4d38e; page text normalized by load_pdf. Human expectations supplied in the diagnostic review; MiniLM labels below are prior observations, not ground truth or fresh inference.",
+  "pages": [
+    {
+      "text": "CloudDesk Access Control Policy All employees must use unique user accounts. Multi-factor authentication is required for administrative access.",
+      "metadata": {"source": "access_control_policy.pdf", "page": 1, "chunk_index": 0},
+      "human_expected_label": "entailment",
+      "human_rationale": "The policy explicitly requires all employees to use unique user accounts.",
+      "previously_observed_minilm_label": "entailment"
+    },
+    {
+      "text": "Access Review CloudDesk reviews user access permissions every quarter. Terminated employee access is revoked within 24 hours.",
+      "metadata": {"source": "access_control_policy.pdf", "page": 2, "chunk_index": 0},
+      "human_expected_label": "neutral",
+      "human_rationale": "Access reviews and termination revocation neither establish nor contradict the requirement for unique accounts.",
+      "previously_observed_minilm_label": "contradiction"
+    }
+  ]
+}

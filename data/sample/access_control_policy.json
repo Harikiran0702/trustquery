@@ -1,0 +1,67 @@
+{
+  "title": "Access Control Policy",
+  "company": "CloudDesk Technologies",
+  "company_context": "Fictional 75-person B2B SaaS",
+  "synthetic": true,
+  "provenance": "model_authored",
+  "review_status": "requires_user_review",
+  "approval_status": "not_recorded",
+  "version": "2.0-proposed",
+  "owner": null,
+  "approver": null,
+  "effective_date": null,
+  "human_review": {
+    "reviewer": null,
+    "reviewed_at": null,
+    "decision": null
+  },
+  "legacy_source": {
+    "path": "data/sample/access_control_policy.pdf",
+    "sha256": "1e570731e788d3449a1e1e181a6d04927d011d87add4ce78becd52a94efb128b"
+  },
+  "corpus_status": "active_synthetic_evaluation_source_pending_review",
+  "pages": [
+    {
+      "heading": "Accounts and administrative access",
+      "sections": [
+        {
+          "heading": "About this policy",
+          "text": "This proposed policy is for CloudDesk, a fictional 75-person B2B SaaS company. It sets requirements for employee accounts and administrative access."
+        },
+        {
+          "heading": "Employee accounts",
+          "text": "All employees must use unique user accounts."
+        },
+        {
+          "heading": "Administrative access",
+          "text": "Multi-factor authentication is required for administrative access."
+        },
+        {
+          "heading": "Document status",
+          "text": "SYNTHETIC / DEMO. This is a model-authored proposed policy for review. It does not show that these controls are in use or that CloudDesk is certified or compliant. Review_status: requires_user_review. Approval_status: not_recorded."
+        }
+      ]
+    },
+    {
+      "heading": "Access review and employee departures",
+      "sections": [
+        {
+          "heading": "Access reviews",
+          "text": "CloudDesk reviews user access permissions every quarter."
+        },
+        {
+          "heading": "Terminated employees",
+          "text": "Terminated employee access is revoked within 24 hours."
+        },
+        {
+          "heading": "How to read these requirements",
+          "text": "These statements describe proposed requirements. They are not records of completed access reviews or access removal. This policy does not set additional roles, procedures or approval arrangements."
+        },
+        {
+          "heading": "Document status",
+          "text": "SYNTHETIC / DEMO. Model-authored proposed policy. Review_status: requires_user_review. Approval_status: not_recorded."
+        }
+      ]
+    }
+  ]
+}

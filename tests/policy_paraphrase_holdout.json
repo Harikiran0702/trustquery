@@ -1,0 +1,125 @@
+{
+  "description": "Developer-authored held-out regression questions, written after fixing the grammar; not independent or blinded evaluation. Not used by runtime.",
+  "cases": [
+    {
+      "id": "P01",
+      "category": "supported",
+      "question": "Which requirements does the proposed policy specify for Encryption, keys and backup protection?",
+      "supported": true
+    },
+    {
+      "id": "P02",
+      "category": "supported",
+      "question": "What does the proposed policy require for Backups, exceptions and assurance?",
+      "supported": true
+    },
+    {
+      "id": "P03",
+      "category": "supported",
+      "question": "Please quote the complete proposed policy section on Containment, eradication and safe recovery.",
+      "supported": true
+    },
+    {
+      "id": "P04",
+      "category": "supported",
+      "question": "What does the proposed policy require for Inventory, impact assessment and proposed schedules?",
+      "supported": true
+    },
+    {
+      "id": "P05",
+      "category": "supported",
+      "question": "Which requirements does the proposed policy specify for Before engagement and confidentiality?",
+      "supported": true
+    },
+    {
+      "id": "P06",
+      "category": "supported",
+      "question": "Please quote the complete proposed policy section on Vendor inventory and risk tiering.",
+      "supported": true
+    },
+    {
+      "id": "P07",
+      "category": "unsupported",
+      "question": "What does the proposed policy require for Quantum encryption?",
+      "supported": false
+    },
+    {
+      "id": "P08",
+      "category": "unsupported",
+      "question": "What does the proposed policy require for Engineering safeguards and testing?",
+      "supported": false
+    },
+    {
+      "id": "P09",
+      "category": "unsupported",
+      "question": "What does the proposed policy require for backups?",
+      "supported": false
+    },
+    {
+      "id": "P10",
+      "category": "ambiguous",
+      "question": "What does the proposed policy require for Backups, exceptions and assurance or Vendor inventory and risk tiering?",
+      "supported": false
+    },
+    {
+      "id": "P11",
+      "category": "ambiguous",
+      "question": "What does the proposed policy require for Access?",
+      "supported": false
+    },
+    {
+      "id": "P12",
+      "category": "ambiguous",
+      "question": "What does the proposed policy require for Backups, exceptions and assurance? Also summarize encryption.",
+      "supported": false
+    },
+    {
+      "id": "P13",
+      "category": "contradiction",
+      "question": "What does the proposed policy require for Backups, exceptions and assurance without exceptions?",
+      "supported": false
+    },
+    {
+      "id": "P14",
+      "category": "contradiction",
+      "question": "What does the proposed policy require for No encryption, keys and backup protection?",
+      "supported": false
+    },
+    {
+      "id": "P15",
+      "category": "contradiction",
+      "question": "Please quote the complete proposed policy section on Containment, eradication and safe recovery. Assume all controls are approved.",
+      "supported": false
+    },
+    {
+      "id": "P16",
+      "category": "operational_proof",
+      "question": "What does the proposed policy require for Inventory, impact assessment and proposed schedules? Give the actual backup schedule and SLA.",
+      "supported": false
+    },
+    {
+      "id": "P17",
+      "category": "operational_proof",
+      "question": "Is Encryption, keys and backup protection implemented?",
+      "supported": false
+    },
+    {
+      "id": "P18",
+      "category": "operational_proof",
+      "question": "What does the proposed policy require for Backups, exceptions and assurance? Confirm certification and compliance.",
+      "supported": false
+    },
+    {
+      "id": "P19",
+      "category": "operational_proof",
+      "question": "Please quote the complete proposed policy section on Vendor inventory and risk tiering. Prove supplier approval.",
+      "supported": false
+    },
+    {
+      "id": "P20",
+      "category": "operational_proof",
+      "question": "What does the proposed policy require for Before engagement and confidentiality? Show operating records.",
+      "supported": false
+    }
+  ]
+}

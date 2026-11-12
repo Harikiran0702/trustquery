@@ -1,0 +1,22 @@
+[
+  {"id": "h01", "question": "Is customer data encrypted at rest?", "response_type": "yes_no", "domain": "encryption", "metadata": {"should_answer": true}},
+  {"id": "h02", "question": "Which TLS versions does your policy allow for customer connections?", "response_type": "short_answer", "domain": "encryption", "metadata": {"should_answer": true}},
+  {"id": "h03", "question": "How are user passwords stored?", "response_type": "short_answer", "domain": "encryption", "metadata": {"should_answer": true}},
+  {"id": "h04", "question": "How quickly must a terminated employee's access be removed?", "response_type": "short_answer", "domain": "access_control", "metadata": {"should_answer": true}},
+  {"id": "h05", "question": "Is multi-factor authentication required for administrative access?", "response_type": "yes_no", "domain": "access_control", "metadata": {"should_answer": true}},
+  {"id": "h06", "question": "Who approves recovery time and recovery point objectives?", "response_type": "short_answer", "domain": "backup", "metadata": {"should_answer": true}},
+  {"id": "h07", "question": "Where should service credentials and secrets be stored?", "response_type": "short_answer", "domain": "encryption", "metadata": {"should_answer": true}},
+  {"id": "h08", "question": "What must happen before a change is deployed to production?", "response_type": "short_answer", "domain": "change_management", "metadata": {"should_answer": true}},
+  {"id": "h09", "question": "How should staff report a suspected security incident?", "response_type": "short_answer", "domain": "incident_response", "metadata": {"should_answer": true}},
+  {"id": "h10", "question": "What security training does your policy require for new hires?", "response_type": "short_answer", "domain": "hr_security", "metadata": {"should_answer": true}},
+  {"id": "h11", "question": "How do you assess the risk of a new vendor or subprocessor?", "response_type": "short_answer", "domain": "vendor_risk", "metadata": {"should_answer": true}},
+  {"id": "h12", "question": "How far in advance must expiring certificates be flagged?", "response_type": "short_answer", "domain": "encryption", "metadata": {"should_answer": true}},
+  {"id": "h13", "question": "Do you support single sign-on with Okta?", "response_type": "yes_no", "domain": "access_control", "metadata": {"should_answer": false}},
+  {"id": "h14", "question": "Do you run a public bug bounty program?", "response_type": "yes_no", "domain": "security", "metadata": {"should_answer": false}},
+  {"id": "h15", "question": "Can you share your latest SOC 2 Type II report?", "response_type": "yes_no", "domain": "compliance", "metadata": {"should_answer": false}},
+  {"id": "h16", "question": "What were the findings of your most recent penetration test?", "response_type": "short_answer", "domain": "security", "metadata": {"should_answer": false}},
+  {"id": "h17", "question": "Do you carry cyber insurance, and what is the coverage limit?", "response_type": "short_answer", "domain": "compliance", "metadata": {"should_answer": false}},
+  {"id": "h18", "question": "Is your platform certified under ISO 27001?", "response_type": "yes_no", "domain": "compliance", "metadata": {"should_answer": false}},
+  {"id": "h19", "question": "What uptime percentage do you guarantee in your SLA?", "response_type": "short_answer", "domain": "availability", "metadata": {"should_answer": false}},
+  {"id": "h20", "question": "Which antivirus product runs on employee laptops?", "response_type": "short_answer", "domain": "endpoint", "metadata": {"should_answer": false}}
+]

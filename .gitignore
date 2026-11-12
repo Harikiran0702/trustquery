@@ -1,0 +1,88 @@
+# Environment variables / secrets
+.env
+.env.*
+!.env.example
+
+# Python virtual environments
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Type checking / linting
+.mypy_cache/
+.ruff_cache/
+
+# IDE
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Chroma vector database
+chroma_db/
+chroma_data/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Temporary files
+*.tmp
+*.temp
+
+# User-uploaded / potentially sensitive documents
+data/uploads/
+
+# ChromaDB local data
+.chroma/
+.chroma_demo/
+.chroma_evaluation/
+
+# Evaluation runtime cache
+data/eval/generation_cache.json
+# Release hardening: sidecars and evaluation-sensitive records
+*.db-wal
+*.db-shm
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-wal
+*.sqlite3-shm
+/data/eval/**/*.private.json
+/docs/examples/*.xlsx
+/data/batch_runs/**/*.xlsx
+/engineering_evaluations/**/*.xlsx
+# pytest basetemp directories, including nested Chroma/index binaries
+**/pytest-of-*/
+**/pytest-current/
+**/pytest-[0-9]*/
+# Existing engineering basetemp directories (not development fixtures)
+/engineering_evaluations/**/pytest_*/
+
+# Local agent state and generated offline test runs
+/.codex/
+/test-temp-offline-all/
+# Saved UI review exports (UUID runs); preserve locally, never publish by default
+/data/reviews/ui_v1/*/results.json
+
+/archive/
