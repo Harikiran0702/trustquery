@@ -74,7 +74,7 @@ def corpus_hashes():
     return hashes
 
 
-def create_run(name, raw, directory=None, *, offline=False):
+def create_run(name, raw, directory=None, *, offline=False, hybrid=True, cache_ranking=True):
     suffix, count = validate_upload(name, raw)
     offline_mode()
     hashes = corpus_hashes()
@@ -84,9 +84,10 @@ def create_run(name, raw, directory=None, *, offline=False):
     from trustquery import general_rag
     corpus = general_rag.load_corpus()
     chunks = corpus[0]
+    retrieval_options = dict(corpus=corpus, hybrid=hybrid, cache_ranking=cache_ranking)
     retrieved = {}
     def retrieve(*, query, chunks, top_k, **unused):
-        result = general_rag.retrieve(dict(question=query), corpus=corpus)
+        result = general_rag.retrieve(dict(question=query), **retrieval_options)
         retrieved[query] = result
         by_locator = {(s['metadata']['source'], s['metadata']['page']): s for s in chunks}
         return [dict(by_locator[c['source'], c['page']], **c['scores']) for c in result['candidates'][:top_k]]
@@ -103,13 +104,12 @@ def create_run(name, raw, directory=None, *, offline=False):
         if result is None:
             raise ValueError('Offline retrieval failed; no incomplete run saved')
         # Reapply final operational/ambiguity assessment to the saved eligibility.
-        # Ranking is reused from the immutable offline cache; no model/API call.
-        result = general_rag.retrieve(r, corpus=corpus)
+        result = general_rag.retrieve(r, **retrieval_options)
         # Preserve conservative assessment; candidate availability never grants support.
         r['general_rag'] = result
         # Persist the complete preflight gates as well as retrieval availability.
         # Outgoing prompt/pages remain session-only; never store repeated context.
-        prepared = general_rag.prepare(r)
+        prepared = general_rag.prepare(r, cache_ranking=cache_ranking)
         for field in ('eligible', 'reasons', 'disposition', 'reason_codes', 'disposition_reasons', 'next_action'):
             result[field] = prepared[field]
         r['provenance'].update(retrieval_method=result['method'],
@@ -162,9 +162,13 @@ def reopen_run(run_id, directory=None):
 
 
 def saved_run_ids():
+    return list_run_ids(run_directory())
+
+
+def list_run_ids(directory):
     """List only immediate UUID directories; do not read reviews on startup."""
     import re
-    parent = run_directory()
+    parent = Path(directory)
     if parent.resolve() != parent.absolute():
         raise ValueError('Redirected UI run directory is unsupported')
     if not parent.exists():

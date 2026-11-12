@@ -24,7 +24,7 @@ def render_metrics(rows, states):
         column.metric(label, count)
 
 
-def render_review(rows, states, store, context, session, requested):
+def render_review(rows, states, store, context, session, requested, *, hosted=False, hybrid=False):
     target = requested[-1]
     drafts = session['drafts']
     active = session['active']
@@ -51,8 +51,9 @@ def render_review(rows, states, store, context, session, requested):
     render_draft(r)
     st.caption(f"Review: {current['status']} | Revision: {current['revision']}")
     render_conflict(store, r, draft, prefix, latest)
-    render_live_draft(r, draft, prefix, pending, latest)
-    render_editor(r, draft, prefix, pending, save, latest)
+    if not hosted:
+        render_live_draft(r, draft, prefix, pending, latest)
+    render_editor(r, draft, prefix, pending, save, latest, section_hybrid=hybrid if hosted else None)
     with st.expander('Saved review history'):
         st.json(store.history(active))
 
@@ -138,16 +139,22 @@ def render_conflict(store, r, draft, prefix, latest):
 
 
 def render_live_draft(r, draft, prefix, pending, latest):
+    from trustquery.review_gemini import configured
+
+    if not configured():
+        return
     from trustquery.review_rag import render as render_ai_draft
+
     with st.expander('Generate a live AI draft'):
         render_ai_draft(st, r, draft, prefix, blocked=bool(
             pending or draft['conflict'] is not None or latest['revision'] != draft['base']['revision']))
 
 
-def render_sections(r):
+def render_sections(r, hybrid):
     if st.toggle('Enable read-only section candidates', value=False):
         from trustquery.candidate_sections import locate
-        hybrid = st.toggle('Use offline hybrid section ranking', value=False)
+        if hybrid is None:
+            hybrid = st.toggle('Use offline hybrid section ranking', value=False)
         if hybrid:
             from trustquery.hybrid_candidate_sections import locate
         if st.button('Locate full policy sections (read only)'):
@@ -272,10 +279,10 @@ def render_approval_scope(r, draft, prefix):
     st.checkbox(attestation, key=prefix+'scope_checked')
 
 
-def render_editor(r, draft, prefix, pending, save_draft, latest):
+def render_editor(r, draft, prefix, pending, save_draft, latest, *, section_hybrid):
     with st.expander('Additional review tools'):
         experimental_enabled = st.toggle('Enable experimental policy drafts', value=False)
-        render_sections(r)
+        render_sections(r, section_hybrid)
         render_bounded_answer(r, draft)
         render_experimental(r, draft, pending, latest, experimental_enabled)
         reset = draft.pop('reset_widgets', False)

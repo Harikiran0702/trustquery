@@ -118,7 +118,7 @@ def conflict_signals(corpus):
     return signals
 
 
-def retrieve(record, *, corpus=None, hybrid=True):
+def retrieve(record, *, corpus=None, hybrid=True, cache_ranking=True):
     """All questions receive candidates, including questions ineligible to draft."""
     corpus, excluded, hashes = load_corpus() if corpus is None else corpus
     q = record.get('question')
@@ -127,7 +127,8 @@ def retrieve(record, *, corpus=None, hybrid=True):
     identities = [key(s) for s in corpus]
     if len(set(identities)) != len(identities):
         raise ValueError('Source identity collision')
-    ranked, method, fallback = rank(q, corpus, hybrid=hybrid)
+    rank_question = rank if cache_ranking else _rank
+    ranked, method, fallback = rank_question(q, corpus, hybrid=hybrid)
     known = {key(s): s for s in corpus}
     candidates = []
     for hit in ranked[:5]:
@@ -174,11 +175,12 @@ def retrieve(record, *, corpus=None, hybrid=True):
     return result
 
 
-def prepare(record):
+def prepare(record, *, cache_ranking=True):
     corpus = load_corpus()
     # Reproduce stored retrieval mode; reopening cannot silently switch ranking.
     saved = record.get('general_rag', {})
-    result = retrieve(record, corpus=corpus, hybrid=saved.get('method') != 'bm25_full_pages')
+    result = retrieve(record, corpus=corpus, hybrid=saved.get('method') != 'bm25_full_pages',
+                      cache_ranking=cache_ranking)
     if saved and (saved.get('version') != VERSION or saved.get('model_versions') != result['model_versions'] or
                   saved.get('corpus_sha256') != result['corpus_sha256'] or
                   saved.get('candidates') != result['candidates'] or saved.get('method') != result['method']):

@@ -210,9 +210,9 @@ def test_app_process_widget_with_mocked_upload(tmp_path, monkeypatch, kind):
     upload=Upload(raw)
     monkeypatch.setattr(st, 'file_uploader', lambda *a, **k: upload)
     original=w.create_run
-    def create_offline_run(name, raw, *, offline):
-        assert offline is True
-        return original(name, raw, tmp_path, offline=offline)
+    def create_offline_run(name, raw, directory=None, **options):
+        assert directory is None and options['offline'] is True
+        return original(name, raw, tmp_path, **options)
 
     monkeypatch.setattr(w, 'create_run', create_offline_run)
     at=AppTest.from_file(str(APP),default_timeout=30).run()

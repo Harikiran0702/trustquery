@@ -3,9 +3,7 @@
 [![CI](https://github.com/Harikiran0702/trustquery/actions/workflows/ci.yml/badge.svg)](https://github.com/Harikiran0702/trustquery/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-TrustQuery helps answer security questionnaires. You give it a list of questions, it looks through a company's security policies, and it drafts an answer for each one with the exact pages it used. If the policies don't cover a question, it says so instead of making something up. A person then reviews every answer before anything is exported.
-
-![Demo](docs/demo.gif)
+TrustQuery helps answer security questionnaires. You give it a list of questions, it looks through a company's security policies, and it drafts an answer for each one with the exact pages it used. If the policies don't cover a question, it says so instead of making something up. A person can review the drafts before exporting them.
 
 **Live demo:** coming soon
 
@@ -28,11 +26,11 @@ flowchart LR
     H --> X[Excel export]
 ```
 
-1. **Search.** Each question is matched against the policy documents in two ways: keyword search (BM25) and meaning-based search (a small MiniLM embedding model). The two result lists are merged and re-ranked.
+1. **Search.** With hybrid search enabled, each question is matched against the policy documents in two ways: keyword search (BM25) and meaning-based search (a small MiniLM embedding model). The two result lists are merged and re-ranked.
 2. **Decide whether to answer.** If the best passages don't really match the question, for example it asks about a tool the policies never mention, TrustQuery doesn't answer.
-3. **Draft.** With a Gemini API key, Gemini writes a short answer using only the retrieved passages and cites them. Without a key, TrustQuery shows the most relevant sentences from the policies instead.
+3. **Draft.** The answer pipeline can use a Gemini API key to draft from the retrieved passages. Batch drafting in the review app uses cached drafts or policy extracts.
 4. **Check.** When the local fact-checking model is available, each answer is compared against its sources, and the result feeds into a confidence label.
-5. **Review.** Everything lands in a review screen where a person can approve, edit, reject or mark it as needing more evidence. Only reviewed answers go into the Excel export.
+5. **Review.** Everything lands in a review screen where a person can approve, edit, reject or mark it as needing more evidence. The Excel export includes the batch drafts and any saved review decisions.
 
 Questions that ask whether something is *actually done* ("Do you enforce MFA today?") get flagged, because a policy saying something should happen isn't proof that it does.
 
@@ -40,7 +38,7 @@ Questions that ask whether something is *actually done* ("Do you enforce MFA tod
 
 I tested it on a set of 100 sample questions with known answers, and on 20 extra questions I wrote separately. I tuned the system on the 100, but never on the 20, so the 20 show how it handles questions it hasn't seen.
 
-**Finding the right page (100-question set)**
+**Finding the right page (54 labeled questions from the 100-question set)**
 
 | | Keyword only | Keyword + meaning (hybrid) |
 |---|---|---|
@@ -63,10 +61,10 @@ You need Python 3.12.
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\activate
+source .venv/bin/activate          # Windows PowerShell: .\.venv\Scripts\Activate.ps1
 pip install -e ".[review,test]"
 
-# Optional: download the two small search models (about 100 MB) for better results
+# Optional: cache the search models before starting with TRUSTQUERY_DOWNLOAD_MODELS=1
 python scripts/download_models.py
 
 streamlit run src/trustquery/review_app.py
@@ -74,7 +72,7 @@ streamlit run src/trustquery/review_app.py
 
 Then click **Load sample questionnaire**.
 
-To get written answers from Gemini, copy `.env.example` to `.env` and add your `GEMINI_API_KEY`. Without it, the app still works and shows policy extracts.
+To use Gemini with the answer pipeline or the opt-in local preview, copy `.env.example` to `.env` and add your `GEMINI_API_KEY`. The review app works offline with cached drafts and policy extracts.
 
 To rerun the evaluation: `python scripts/evaluate.py --hybrid`
 
@@ -90,7 +88,7 @@ src/trustquery/
 scripts/             evaluation, model download, demo cache
 data/sample/         the eight sample policy documents
 data/eval/           test questions and expected answers
-tests/               about 1,350 automated tests
+tests/               automated tests
 ```
 
 ## Limitations
@@ -103,3 +101,11 @@ tests/               about 1,350 automated tests
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+## Deploy
+
+Create a free Streamlit Community Cloud app from this GitHub repo, choose Python 3.12, and set the entry point to `streamlit_app.py`.
+Streamlit installs the dependencies from `requirements.txt`.
+Leave `GEMINI_API_KEY` unset to run the demo with cached answers and policy extracts.
+Set `TRUSTQUERY_DOWNLOAD_MODELS = "1"` in the app's secrets if you want hybrid search.
+Review runs are temporary and private to each visitor's session.
