@@ -26,10 +26,36 @@ def process(name, read_bytes, directory, hybrid):
         st.error(f'Processing failed: {exc}. Existing reviews are retained.')
 
 
+@st.cache_resource(show_spinner=False)
+def prepare_sample(hybrid):
+    from trustquery.review_workflow import prepare_run
+
+    with st.spinner('Preparing sample (first load only)'):
+        return prepare_run(SAMPLE.name, SAMPLE.read_bytes(), offline=True, hybrid=hybrid,
+                           cache_ranking=False)
+
+
 def render_upload(dirty_any, accepted_paths, directory, hybrid):
+    sample = None
+    if directory is not None:
+        try:
+            sample = prepare_sample(hybrid)
+        except (ValueError, OSError, sqlite3.Error, RecursionError) as exc:
+            st.error(f'Sample preparation failed: {exc}. Existing reviews are retained.')
     with st.expander('Start a questionnaire review', expanded=not bool(accepted_paths and accepted_paths[0])):
-        if st.button('Load sample questionnaire', disabled=dirty_any):
-            process(SAMPLE.name, SAMPLE.read_bytes, directory, hybrid)
+        if st.button('Load sample questionnaire',
+                     disabled=dirty_any or (directory is not None and sample is None)):
+            if directory is None:
+                process(SAMPLE.name, SAMPLE.read_bytes, directory, hybrid)
+            else:
+                from trustquery.review_workflow import instantiate_run
+
+                try:
+                    batch, database, count = instantiate_run(*sample, directory)
+                    select_paths(batch, database)
+                    st.success(f'Processed {count} questions.')
+                except (ValueError, OSError, sqlite3.Error) as exc:
+                    st.error(f'Processing failed: {exc}. Existing reviews are retained.')
         st.download_button('Download questionnaire template', b'id,question,response_type\nq1,What does the written access control policy require for access reviews?,short_answer\n', file_name='questionnaire-template.csv', mime='text/csv')
         upload = st.file_uploader('Upload security questionnaire', type=['csv', 'json'], disabled=dirty_any)
         valid = False

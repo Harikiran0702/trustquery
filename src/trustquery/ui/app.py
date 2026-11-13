@@ -55,7 +55,9 @@ def main(*, hosted=False):
     st.caption("Drafts security-questionnaire answers from policy documents, with citations, and says so when there's no evidence.")
     st.warning('Demo uses fictional policies.')
     sessions, dirty_any, accepted_paths = collect_drafts()
-    hybrid = os.getenv('TRUSTQUERY_DOWNLOAD_MODELS') == '1' and download_search_models()
+    demo = hosted and not os.getenv('GEMINI_API_KEY', '').strip()
+    hybrid = (not demo and os.getenv('TRUSTQUERY_DOWNLOAD_MODELS') == '1'
+              and download_search_models())
     directory = None
     if hosted:
         if 'review_temp_directory' not in st.session_state:

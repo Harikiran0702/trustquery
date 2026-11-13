@@ -75,6 +75,12 @@ def corpus_hashes():
 
 
 def create_run(name, raw, directory=None, *, offline=False, hybrid=True, cache_ranking=True):
+    payload, count = prepare_run(name, raw, offline=offline, hybrid=hybrid,
+                                 cache_ranking=cache_ranking)
+    return instantiate_run(payload, count, directory)
+
+
+def prepare_run(name, raw, *, offline, hybrid, cache_ranking):
     suffix, count = validate_upload(name, raw)
     offline_mode()
     hashes = corpus_hashes()
@@ -121,6 +127,12 @@ def create_run(name, raw, directory=None, *, offline=False, hybrid=True, cache_r
             candidate = next((c for c in result['candidates'] if c['source'] == ref['source'] and c['page'] == ref['page']), None)
             if candidate is not None:
                 ref.update({k:candidate[k] for k in ('pdf_sha256','page_utf8_sha256','section_utf8_sha256','section_kind')})
+    payload = json.dumps(records, ensure_ascii=False, allow_nan=False, indent=2).encode('utf-8')
+    return payload, count
+
+
+def instantiate_run(payload, count, directory):
+    """Save initial batch results and initialize an empty review database."""
     parent = Path(directory) if directory is not None else run_directory()
     if parent.resolve() != parent.absolute():
         raise ValueError('Redirected UI run directory is unsupported')
@@ -128,8 +140,8 @@ def create_run(name, raw, directory=None, *, offline=False, hybrid=True, cache_r
     run = parent / uuid.uuid4().hex
     run.mkdir()  # Exclusive allocation; repeated uploads never overwrite reviews.
     batch = run / 'results.json'
-    with batch.open('x', encoding='utf-8') as stream:
-        json.dump(records, stream, ensure_ascii=False, allow_nan=False, indent=2)
+    with batch.open('xb') as stream:
+        stream.write(payload)
     _, digest = load_batch(batch)
     db = run / 'review.sqlite3'
     ReviewStore(db, digest)
