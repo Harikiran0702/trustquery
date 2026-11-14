@@ -1900,9 +1900,9 @@
     ]
   },
   "__gemini_usage__": {
-    "date": "2026-11-11",
-    "calls": 6,
-    "last_call": 1794428178.5710511
+    "date": "2026-11-13",
+    "calls": 8,
+    "last_call": 1794585518.4654253
   },
   "cdq001": {
     "question": "How often does your written policy call for staff access reviews, and who is meant to follow up on unnecessary access?",
@@ -1997,5 +1997,140 @@
     "method": "offline_policy_extract",
     "answer": "",
     "citations": []
+  },
+  "cdq006": {
+    "question": "For a contractor helping with our rollout, what access limits does your policy require?",
+    "method": "offline_policy_extract",
+    "answer": "The policy text states: This policy covers employees, temporary personnel, contractors and vendor workers who can access company systems or information in scope.",
+    "citations": [
+      {
+        "source": "hr_security_policy.pdf",
+        "page": 1,
+        "quote": "This policy covers employees, temporary personnel, contractors and vendor workers who can access company systems or information in scope."
+      }
+    ]
+  },
+  "cdq007": {
+    "question": "Can someone who administers your encryption keys also read customer data by default?",
+    "method": "grounded_gemini",
+    "answer": "Policy-based draft (implementation evidence still required):\n\nNo. Key administrators have no default decrypt permission, as key administration is separated from routine data access.\n\nSource: encryption_key_management_policy.pdf, Page 3",
+    "citations": [
+      {
+        "source": "information_security_policy.pdf",
+        "page": 3,
+        "quote": "ES-256 at rest for covered production storage and backups.\nUse managed KMS for production keys. Rotate symmetric key-encryption keys at least every 12 months.\nRetain older versions only while dependent data or backups need them. Follow the detailed grant, certificate,\nsecrets and destruction requirements. Customer-managed keys and end-to-end encryption are not assumed\ncapabilities.\nSecurity awareness and training\nManagers must arrange security awareness training at onboarding and annually thereafter. Cover phishing,\nsafe sharing, credential protection, incident reporting and classification. Give privileged operators and\ndevelopers role-specific guidance when their responsibilities change. The Engineering Lead must track\nassigned training, attendance, completion and overdue follow-up. These are required records, not evidence of\ncompleted training.\nVendor management oversight\nThe business owner must assess each vendor before it handles information covered by this policy. Document\ndata ac"
+      },
+      {
+        "source": "encryption_key_management_policy.pdf",
+        "page": 3,
+        "quote": "SYNTHETIC / DEMO | CD-ENC-001 v1.0 | Requires user review\nPage 3 of 4\nCloudDesk Technologies\n Encryption and Key Management Policy\n3. Key storage, access and lifecycle\nKey storage\nPlatform Engineering must use managed cloud KMS and envelope encryption for production keys.\nKey-encryption keys stay non-exportable in KMS. Store encrypted data keys with their encrypted objects when\nthe service requires it. Keep application secrets and supported certificate private keys in a secrets manager.\nSeparate production keys and grants from development and test.\nKey access\nAllow decrypt operations only for named workload identities and approved operators with a documented\nbusiness need. Use least privilege and separate key administration from routine data access. Key\nadministrators have no default decrypt permission. Engineering Lead approves grants. Human administrators\nuse unique accounts and MFA. Review key grants every quarter and revoke terminated employee access\nwithin 24 hours.\nRotation\nRotat"
+      },
+      {
+        "source": "encryption_key_management_policy.pdf",
+        "page": 1,
+        "quote": "rtification, external audit or legal compliance claim.\nReview_status: requires_user_review. Approval_status: not_recorded.\nScope\nThis policy covers employees, contractors and service identities handling customer data, credentials,\nproduction configuration or internal confidential information across the hosted SaaS service, supporting cloud\ninfrastructure, corporate endpoints and backups. Public marketing content may be stored unencrypted;\nauthentication and administrative traffic still need transport protection. Assess vendors handling this\ninformation against these requirements before use.\nRelated access requirements\nUse unique user accounts and MFA for administrative access. Review user access permissions every quarter\nand revoke terminated employee access within 24 hours. Key permissions below add to these access\nrequirements. Customer-managed keys and end-to-end encryption are not assumed capabilities."
+      }
+    ]
+  },
+  "cdq008": {
+    "question": "If a departing employee's account appears compromised, does your process allow containment before the normal offboarding steps finish?",
+    "method": "grounded_gemini",
+    "answer": "Policy-based draft (implementation evidence still required):\n\nYes. According to the policy, immediate containment action must be taken without delaying for the 24-hour offboarding window, a ticket, or routine personnel approval (Source: hr_security_policy.pdf, Page: 4). \n\nResponders may take urgent reversible action under incident authority, and the policy explicitly states that the 24-hour outer termination limit must not delay urgent compromise containment (Source: hr_security_policy.pdf, Page: 4; incident_response_plan.pdf, Page: 4).",
+    "citations": [
+      {
+        "source": "hr_security_policy.pdf",
+        "page": 4,
+        "quote": "diately under incident_response_plan.pdf. Take\nimmediate containment action; do not delay containment for the 24-hour window, a ticket or routine personnel\napproval. Responders may take urgent reversible action under incident authority. The CTO retains material\nshutdown and residual-risk decisions. Coordinate timely contractor/vendor access removal and record its\nscope and verified completion.\nOffboarding checklist, assets and preservation\nManagers coordinate verified departure notices and asset return. System owners and authorized operators\ndisable accounts and revoke sessions, tokens, remote access and delegated grants. Remove group\nmemberships and rotate shared secrets where exposure requires. Record exceptions, outstanding assets and\nverified revocation times. Transfer necessary records and service ownership without sharing credentials.\nPreserve incident/evidence holds and relevant logs before disposal where safe. Do not delay urgent\ncontainment to collect evidence. Returning a dev"
+      },
+      {
+        "source": "incident_response_plan.pdf",
+        "page": 4,
+        "quote": "p before necessary\ncollection.\nCloud, SaaS and identity compromise\nCheck cloud IAM, federated identity, OAuth grants, API tokens, service accounts, automation, exposed\nstorage, suspicious rules and cross-tenant paths. Revoke affected sessions and grants. Reset compromised\ncredentials through trusted systems, rotate dependent secrets and remove unauthorized integrations. Look for\npersistence beyond password resets and coordinate with providers. Shared responsibility does not remove\nCloudDesk's investigation duties. Keep unique user accounts, MFA for administrative access and quarterly\naccess reviews. Revoke terminated employee access within 24 hours. This is the outer termination limit; do\nnot delay urgent compromise containment.\nKey compromise and backup access\nFor suspected key compromise, immediately open an incident, revoke affected identity grants and disable\ncompromised key versions where safe under CD-ENC-001. Replace compromised certificate private keys\nimmediately. Create repla"
+      }
+    ]
+  },
+  "cdq009": {
+    "question": "Is MFA enforced for everyone with administrative access to the service and its keys?",
+    "method": "grounded_gemini",
+    "answer": "Policy-based draft (implementation evidence still required):\n\nAccording to the policy text, multi-factor authentication (MFA) and unique user accounts are required for administrative access generally, and specifically required for human administrators handling key permissions.\n\n* **Sources:**\n  * `encryption_key_management_policy.pdf`, Page 1 (\"Use unique user accounts and MFA for administrative access.\")\n  * `encryption_key_management_policy.pdf`, Page 3 (\"Human administrators use unique accounts and MFA.\")\n  * `incident_response_plan.pdf`, Page 4 (\"Keep unique user accounts, MFA for administrative access and quarterly access reviews.\")",
+    "citations": [
+      {
+        "source": "encryption_key_management_policy.pdf",
+        "page": 1,
+        "quote": "rtification, external audit or legal compliance claim.\nReview_status: requires_user_review. Approval_status: not_recorded.\nScope\nThis policy covers employees, contractors and service identities handling customer data, credentials,\nproduction configuration or internal confidential information across the hosted SaaS service, supporting cloud\ninfrastructure, corporate endpoints and backups. Public marketing content may be stored unencrypted;\nauthentication and administrative traffic still need transport protection. Assess vendors handling this\ninformation against these requirements before use.\nRelated access requirements\nUse unique user accounts and MFA for administrative access. Review user access permissions every quarter\nand revoke terminated employee access within 24 hours. Key permissions below add to these access\nrequirements. Customer-managed keys and end-to-end encryption are not assumed capabilities."
+      },
+      {
+        "source": "incident_response_plan.pdf",
+        "page": 4,
+        "quote": "p before necessary\ncollection.\nCloud, SaaS and identity compromise\nCheck cloud IAM, federated identity, OAuth grants, API tokens, service accounts, automation, exposed\nstorage, suspicious rules and cross-tenant paths. Revoke affected sessions and grants. Reset compromised\ncredentials through trusted systems, rotate dependent secrets and remove unauthorized integrations. Look for\npersistence beyond password resets and coordinate with providers. Shared responsibility does not remove\nCloudDesk's investigation duties. Keep unique user accounts, MFA for administrative access and quarterly\naccess reviews. Revoke terminated employee access within 24 hours. This is the outer termination limit; do\nnot delay urgent compromise containment.\nKey compromise and backup access\nFor suspected key compromise, immediately open an incident, revoke affected identity grants and disable\ncompromised key versions where safe under CD-ENC-001. Replace compromised certificate private keys\nimmediately. Create repla"
+      },
+      {
+        "source": "encryption_key_management_policy.pdf",
+        "page": 3,
+        "quote": "pt permission. Engineering Lead approves grants. Human administrators\nuse unique accounts and MFA. Review key grants every quarter and revoke terminated employee access\nwithin 24 hours.\nRotation\nRotate symmetric key-encryption keys at least every 12 months, using managed rotation where supported.\nNew encryption uses the new active version. Keep restricted decrypt access to older versions only for data or\nbackups still within retention. Rotation alone does not re-encrypt historical data. Platform Engineering must\nrecord the rotation date, version and outcome in the key inventory.\nCompromise, revocation and destruction\nFor suspected key compromise, immediately open an incident, revoke affected identity grants and disable\ncompromised versions where safe. Create replacement keys and assess re-encryption, affected data and\nbackup recoverability. CTO must authorize temporary emergency decrypt access, with logging and\nnext-business-day review. Destroy retired versions only after dependent dat"
+      }
+    ]
+  },
+  "cdq010": {
+    "question": "Can our users sign in through our SAML identity provider?",
+    "method": "offline_policy_extract",
+    "answer": "",
+    "citations": []
+  },
+  "cdq011": {
+    "question": "Can we use SCIM to provision and deactivate our users automatically?",
+    "method": "offline_policy_extract",
+    "answer": "",
+    "citations": []
+  },
+  "cdq012": {
+    "question": "How does your security policy say application passwords should be stored?",
+    "method": "grounded_gemini",
+    "answer": "According to the security policy, passwords must be salted and hashed using a purpose-built password hashing scheme and must not be reversibly encrypted. Additionally, credentials must be kept out of source code, application logs, and support exports, with service credentials stored in the approved secrets manager.\n\n**Source:** encryption_key_management_policy.pdf, Page: 2",
+    "citations": [
+      {
+        "source": "encryption_key_management_policy.pdf",
+        "page": 2,
+        "quote": "ificates before expiry. Replace compromised certificate private keys immediately\nthrough incident response. Prefer managed issuance and renewal.\nStored information\nUse AES-256 through managed cloud encryption for production databases, object storage, persistent\nvolumes, snapshots and scoped log archives. Company laptops must use full-disk encryption through the\nsupported operating system facility. Do not store scoped information on unencrypted removable media.\nEngineering must check encryption settings before provisioning production storage.\nApplication boundaries\nEncryption at rest protects stored media; authorized application processes can still read plaintext. Keep\ncredentials and private keys out of source code, application logs and support exports. Store service\ncredentials in the approved secrets manager. Salt and hash passwords with a purpose-built password hashing\nscheme; do not reversibly encrypt them. Do not build custom cryptographic algorithms."
+      },
+      {
+        "source": "encryption_key_management_policy.pdf",
+        "page": 1,
+        "quote": "rtification, external audit or legal compliance claim.\nReview_status: requires_user_review. Approval_status: not_recorded.\nScope\nThis policy covers employees, contractors and service identities handling customer data, credentials,\nproduction configuration or internal confidential information across the hosted SaaS service, supporting cloud\ninfrastructure, corporate endpoints and backups. Public marketing content may be stored unencrypted;\nauthentication and administrative traffic still need transport protection. Assess vendors handling this\ninformation against these requirements before use.\nRelated access requirements\nUse unique user accounts and MFA for administrative access. Review user access permissions every quarter\nand revoke terminated employee access within 24 hours. Key permissions below add to these access\nrequirements. Customer-managed keys and end-to-end encryption are not assumed capabilities."
+      },
+      {
+        "source": "information_security_policy.pdf",
+        "page": 2,
+        "quote": "in source code, logs or support exports.\nRetention and disposal\nOwners must propose retention schedules based on business need, customer commitments and applicable\nobligations, with review by the appropriate accountable role. Record approved periods and any holds before\ndisposal. Restrict access while information is retained. At end of life, use verified deletion or secure media\ndisposal. This policy sets no retention periods or backup schedules. Public marketing content may be stored\nunencrypted under the encryption policy; administrative and authentication traffic still require transport\nprotection."
+      }
+    ]
+  },
+  "cdq013": {
+    "question": "Do you force every user to change their password every 90 days?",
+    "method": "offline_policy_extract",
+    "answer": "",
+    "citations": []
+  },
+  "cdq014": {
+    "question": "If an API token is exposed, what does your incident plan call for beyond resetting a password?",
+    "method": "grounded_gemini",
+    "answer": "According to the incident response plan, beyond resetting compromised credentials, an incident involving exposed identity elements (such as API tokens) calls for the following actions:\n\n* **Checks:** Inspect cloud IAM, federated identity, OAuth grants, API tokens, service accounts, automation, exposed storage, suspicious rules, and cross-tenant paths [Source: incident_response_plan.pdf, Page 4].\n* **Session & Grant Revocation:** Revoke affected sessions and grants [Source: incident_response_plan.pdf, Page 4].\n* **Secrets & Integrations:** Rotate dependent secrets and remove unauthorized integrations [Source: incident_response_plan.pdf, Page 4].\n* **Persistence & Provider Coordination:** Look for persistence beyond password resets and coordinate with providers [Source: incident_response_plan.pdf, Page 4].",
+    "citations": [
+      {
+        "source": "incident_response_plan.pdf",
+        "page": 4,
+        "quote": "p before necessary\ncollection.\nCloud, SaaS and identity compromise\nCheck cloud IAM, federated identity, OAuth grants, API tokens, service accounts, automation, exposed\nstorage, suspicious rules and cross-tenant paths. Revoke affected sessions and grants. Reset compromised\ncredentials through trusted systems, rotate dependent secrets and remove unauthorized integrations. Look for\npersistence beyond password resets and coordinate with providers. Shared responsibility does not remove\nCloudDesk's investigation duties. Keep unique user accounts, MFA for administrative access and quarterly\naccess reviews. Revoke terminated employee access within 24 hours. This is the outer termination limit; do\nnot delay urgent compromise containment.\nKey compromise and backup access\nFor suspected key compromise, immediately open an incident, revoke affected identity grants and disable\ncompromised key versions where safe under CD-ENC-001. Replace compromised certificate private keys\nimmediately. Create repla"
+      },
+      {
+        "source": "incident_response_plan.pdf",
+        "page": 2,
+        "quote": "SYNTHETIC / DEMO | CD-IRP-001 v1.0 | Requires user review\nPage 2\nCloudDesk Technologies\n Incident Response Plan\n2. Reporting, classification and escalation\nProposed reporting routes\nThe proposed route is an access-restricted incident ticket and direct contact with the Engineering Lead\nthrough a verified internal directory. These are proposals, not live services or monitored addresses. If\nunavailable, contact the CTO or a designated substitute. If company accounts may be compromised, use a\nseparately verified alternate contact method. Validate contacts, coverage and escalation paths before\nadoption. Report promptly when you discover a concern; do not wait for proof. Keep passwords, tokens and\nunnecessary customer data out of reports.\nEvent versus incident\nAn event is an observation, such as a failed login, alert or outage, that needs assessment. An incident is\nsuspected or confirmed unauthorized access, disclosure, alteration, destructive activity or disruption that\nneeds a coordinated "
+      },
+      {
+        "source": "hr_security_policy.pdf",
+        "page": 4,
+        "quote": "diately under incident_response_plan.pdf. Take\nimmediate containment action; do not delay containment for the 24-hour window, a ticket or routine personnel\napproval. Responders may take urgent reversible action under incident authority. The CTO retains material\nshutdown and residual-risk decisions. Coordinate timely contractor/vendor access removal and record its\nscope and verified completion.\nOffboarding checklist, assets and preservation\nManagers coordinate verified departure notices and asset return. System owners and authorized operators\ndisable accounts and revoke sessions, tokens, remote access and delegated grants. Remove group\nmemberships and rotate shared secrets where exposure requires. Record exceptions, outstanding assets and\nverified revocation times. Transfer necessary records and service ownership without sharing credentials.\nPreserve incident/evidence holds and relevant logs before disposal where safe. Do not delay urgent\ncontainment to collect evidence. Returning a dev"
+      }
+    ]
   }
 }
